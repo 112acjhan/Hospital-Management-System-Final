@@ -1,0 +1,787 @@
+============================
+PDFlib 10.0.2 (Jan 22, 2024)
+============================
+
+- 2024-01-16 (CI-560, CSU-971)
+  Added the ability to simultaneously update the values of multiple comboboxes 
+  combined into a group.
+
+- 2024-01-08 (CSU-1258, COP-1083, PDFLIBLEG-10869)
+  .NET wrapper can handle empty streams now.
+
+- 2024-01-08 (CI-670, CSU-1237, PDFLIBLEG-10866)
+  Fixed shaping problem with Thai script
+
+- 2024-01-04 (COP-1082, CSU-1268, PDFLIBLEG-10872)
+  fixed invalid XML created when "javascripts=true".
+
+- 2023-12-22 (CI-456, CSU-945, PDFLIBLEG-10846)
+  The combobox selection can be defined in a readable for Javascript way
+
+- 2023-12-22 (CI-551, CSU-1146, CSU-1129, PDFLIBLEG-10851, PDFLIBLEG-10856)
+  Added the ability to specify an alternate field name (often displayed as 
+  tooltips) for groups of input elements also in non-PDF/UA output modes
+
+- 2023-12-21 (CI-639, CSU-1238, PDFLIBLEG-10867)
+  Broken /XRefStm reference does not cause XRef parsing failure anymore
+
+- 2023-12-18 (COP-1012, PDFLIBLEG-2816)
+  Security: update OpenSSL (to 1.1.1w).
+
+- 2023-12-13 (COP-1010)
+  Security: update libtiff (to 4.6.0)
+
+- 2023-12-13 (COP-1011, PDFLIBLEG-10854, PDFLIBLEG-10834)
+  Security: update libcurl (to 8.5.0).
+
+- 2023-12-08 (COP-986, PDFLIBLEG-10852)
+  Added support for perl 5.38.
+
+- 2023-12-04 (COP-987)
+  Added support for ruby 3.2
+
+- 2023-11-29 (COP-1010)
+  updated libtiff to 4.6.0.
+
+- 2022-11-28 (CSU-1251, COP-1017, PDFLIBLEG-10868)
+  Source builds: fixed cmake build, incomplet4e iputl subproject.
+
+- 2023-11-23 (CSU-1220, PDFLIBLEG-10861)
+  Fixed masterpassword option, which could be rejected depending on its 
+  position in the options list when creating multiple PDFs.
+
+- 2023-11-22 (CSU-1213, CI-607, PDFLIBLEG-10860)
+  Fixed problem with ICC profile in tiff image.
+
+==============================
+PDFlib 10.0.1p9 (Nov 02, 2023)
+==============================
+
+- 2023-10-31 (CSU-1049, COP-855)
+  Added support for PHP 8.3.
+
+- 2023-10-30 (CSU-1067, CI-543)
+  Fixed an invalid tagged PDF structure validation error caused by an uncleaned 
+  table column IDs list.
+
+- 2023-10-16 (CI-522, PDFLIBLEG-10847)
+  Fixed masterpassword option which was rejected when creating multiple PDFs.
+
+- 2023-09-14 (CSU-851, CI-428)
+  Fixed exception when querying the pCOS standard entries for broken metadata.
+
+==============================
+PDFlib 10.0.1p8 (Sep 12, 2023)
+==============================
+
+- 2023-09-12 (PDFLIBLEG-10845)
+  Allow use of Unicode name synonyms for Type3 glyph mappings.
+
+- 2023-09-07 (PDFLIB-512, CI-471)
+  Eliminate duplication of opacity setting for the nested objects in SVG import.
+
+==============================
+PDFlib 10.0.1p7 (Jun 21, 2023)
+==============================
+
+- 2023-07-26 (COP-684)
+  Improve instructions for cross compiling sources for MVS.
+
+- 2023-07-21 (CI-447)
+  Fix clipping path construction and transformation problems in SVG.
+
+- 2023-07-17 (CI-443/CSU-915)
+  Fixed an infinite loop in the PDF tagging subsystem caused by continued 
+  attempts to lookup missing table header metadata.
+
+- 2023-07-07 (CI-413)
+  updated libtiff to 4.5.1.
+
+- 2022-12-08 (PDFLIBLEG-2172)
+  Updated OpenJPEG library to version 2.5.0.
+
+- 2022-12-02 (PDFLIBLEG-10749)
+  Fix endless loop in pCOS that could be caused by an invalid recursive /Parent
+  chain in bookmarks.
+
+- 2022-12-02 (PDFLIBLEG-10754)
+  Updated zlib to version 1.2.13.
+
+
+===============================
+PDFlib 10.0.1p6 (June 01, 2023)
+===============================
+
+- 2023-05-30 (PDFLIBLEG-10825)
+  Update expat to V2.5.0.
+
+- 2023-05-25 (PDFLIBLEG-10824)
+  Enhanced configure to allow gcc/g++ builds on AIX.
+
+- 2023-05-25 (PDFLIBLEG-10821)
+  Added cmake build support to source packages. This allows i.e. to create
+  Visual Studio solutions to build the PDFlib library.
+
+- 2023-05-22 (PDFLIBLEG-10802)
+  Update OpenSSL to 1.1.1t.
+
+- 2023-05-19 (PDFLIBLEG-10822)
+  The SVG import calculated an incorrect bounding box for Form XObjects
+  generated to implement SVG <mask> elements, if the <mask> element contained
+  nested graphical elements with transformations. This caused incorrect
+  renderings for the masked graphical content.
+
+- 2023-05-09 (PDFLIBLEG-10820)
+  PDFlib was not able to decrypt PDF files with RC4 128-bit encryption
+  (pCOS algorithm number 3), unless a "/Length 128" entry was present in the
+  document's encryption dictionary. The PDF specification does not require
+  the presence of the /Length entry for RC4 128-bit encryption. This problem
+  was introduced with PDFlib 10.0.0.
+
+- 2023-04-27 (PDFLIBLEG-10819)
+  XMP was unnecessarily parsed for determining the standard conformance of a
+  PDI input document even if the output document was not produced with
+  conformance to one of the PDF/A, PDF/X or PDF/UA standards. This resulted
+  in unnecessary memory usage proportional to the amount of XMP Metadata in
+  the PDI input file.
+
+
+================================
+PDFlib 10.0.1p5 (April 18, 2023)
+================================
+
+- 2023-04-18 (PDFLIBLEG-10804)
+  In topdown mode PDF_info_path() returned values multiplied with -1 for the
+  y coordinates.
+
+- 2023-04-18 (PDFLIBLEG-10816)
+  PDF_load_graphics() could fail on MVS when the SVG file was read from
+  a z/OS data set.
+
+
+================================
+PDFlib 10.0.1p4 (March 31, 2023)
+================================
+
+- 2023-03-31 (PDFLIBLEG-10814)
+  Fixed a crash that could occur when a PDF file contained invalid
+  signature objects and if the pCOS "signaturefields" pseudo object
+  array was accessed.
+
+- 2023-03-31 (PDFLIBLEG-10800)
+  When the height of a multiline text field was too small, it could happen
+  that text in the field was only displayed after clicking into the field.
+
+- 2023-03-31 (PDFLIBLEG-10811)
+  PDF_create_textflow() could unexpectedly return an error if the Textflow
+  was completely empty after all glyphs were dropped via PDF_load_font()
+  option "replacementchar=drop".
+
+- 2023-03-31 (PDFLIBLEG-10813)
+  A crash occurred under the following conditions:
+  - Import a single page containing a Link annotation to a different page in
+    the input document.
+  - Place that page on a page in the output document.
+  - Close the input document before calling PDF_end_page_ext() for the output
+    document.
+
+- 2023-03-30 (PDFLIBLEG-10810)
+  Leading spaces with a font size greater than the font size of non-space
+  glyphs in the rest of the line did not set the line spacing for the first
+  line of a Textflow in the same manner as when the spaces with the greater
+  font size appeared after the non-space glyphs.
+
+- 2023-03-29 (PDFLIBLEG-10808)
+  The fix for PDFLIBLEG-10790 did not work as expected for portrait images,
+  where the fitting was still incorrect for Exif orientation tags 5 and 7.
+  
+- 2023-02-27 (PDFLIBLEG-10803)
+  The build scripts for building PDFlib for MVS unnecessarily depended on
+  bash, which caused the build to fail on systems without bash.
+
+
+===================================
+PDFlib 10.0.1p3 (February 20, 2023)
+===================================
+
+- 2023-02-20 (PDFLIBLEG-10793)
+  Updated to curl 7.88.1.
+
+- 2023-02-17 (PDFLIBLEG-10783)
+  Shaping in Textflow could produce incorrect results when Unicode control
+  characters like U+200C ZERO WIDTH NON-JOINER were present in the text input,
+  while shaping for textlines worked correctly for the same text.
+
+- 2023-02-16 (PDFLIBLEG-10796)
+  Building from source failed on MVS.
+
+- 2023-02-16 (PDFLIBLEG-10790)
+  Fitting of images could be incorrect for Exif orientation tags 5 and 7.
+
+- 2023-02-15 (PDFLIBLEG-10794)
+  Reduced memory fragmentation when optimizing documents with very large
+  numbers of PDF objects. This could cause avoidable out-of-memory
+  situations on some platforms.
+
+- 2023-02-03 (PDFLIBLEG-10781)
+  Fixed various problems with the import of annotations and form fields that
+  prevented the succesful import of a document with a 3D annotation and
+  corresponding JavaScript actions that interacted with the 3D annotation. A
+  notable change is that the "AP" name tree is now automatically imported
+  together with the "JavaScript" name tree when option "usejavascript=true"
+  is set for PDF_open_pdi_document(). Entries in the "AP" name tree can be
+  referenced from JavaScript code, and it was not possible to import the "AP"
+  name tree up to now.
+
+- 2023-01-23 (PDFLIBLEG-10762)
+  New code introduced in PDFlib 10 caused performance problems when importing
+  very large tagged documents with a huge number of tags, particularly on
+  Windows. Now the performance is on par again with PDFlib 9.
+   
+- 2023-01-19 (PDFLIBLEG-10778)
+  A call to PDF_info_pdi_page() with keyword "fittingpossible" incorrectly
+  returned the value 1 indicating that a PDI page can be imported while the
+  corresponding all to PDF_fit_pdi_page() would fail, if the active tag in the
+  output document was role-mapped and if the topmost-on-page imported tag was
+  an inline artifact.
+
+
+==================================
+PDFlib 10.0.1p2 (January 16, 2023)
+==================================
+
+- 2023-01-16 (PDFLIBLEG-10773)
+  Creation of a "Line" annotation with options "endingstyles={square none}
+  interiorcolor={none}" caused the square at the end of the line to be filled
+  with black. Now the square is transparent as expected.
+ 
+- 2023-01-16 (PDFLIBLEG-10775)
+  Colorizing an annotation with a "checkmark" icon did not work as expected.
+
+- 2023-01-16 (PDFLIBLEG-10775)
+  Added support for building platform-specific .NET packages from source.
+
+- 2023-01-16 (PDFLIBLEG-10769)
+  The build from source on Windows failed with the error message "fatal error
+  U1052: file 'Make_subdirs.inc' not found".
+  
+- 2023-01-16 (PDFLIBLEG-10767)
+  Visual Studio 2022 is now a supported environment for source builds.
+
+- 2023-01-16 (PDFLIBLEG-10772)
+  The PDFlib source package did not contain the directory "bind/pdflib/dotnet".
+  This prevented a successful build of the .NET binding from source.
+
+- 2023-01-16 (PDFLIBLEG-10766)
+  The source package for EBCDIC platforms contained the header file "uassert.h"
+  with a broken encoding.
+
+- 2022-12-14 (PDFLIBLEG-10756)
+  Fixed a crash that could occur when importing tagged PDF. This problem was
+  introduced with the implementation of feature #2995 in PDFlib 10.0.0p5.
+
+- 2022-12-14 (PDFLIBLEG-10764)
+  Fixed a handle leak on Windows where one mutex handle was leaked per
+  invocation of PDF_new(). This problem was introduced with PDFlib 10.
+
+
+===================================
+PDFlib 10.0.1p1 (November 08, 2022)
+===================================
+
+- 2022-11-08 (bug #7353)
+  Import of documents with form fields of type check button, radio button or
+  push button and of size zero caused the unexpected exception "Field '...':
+  Template has no dimensions".
+
+- 2022-11-07 (bug #7364)
+  When PDFlib 10 detected a corrupted JPEG input image during transcoding,
+  an exception was thrown in any case, while PDFlib 9 returned -1 from
+  PDF_load_image() with "errorpolicy=return". The PDFlib 9 behavior is now
+  restored.
+
+- 2022-11-03 (bug #7356)
+  Creating radio button or check box fields with zero width or height caused
+  the unexpected exception "PDF_end_page_ext: Internal error: assertion failed
+  in file '<...>/pc_output.c', line 3209".
+
+- 2022-11-03 (bug #7357)
+  When using a '<' character in the "currentvalue" option of PDF_create_field()
+  for a multiline text field, an unexpected "Unknown option" exception was
+  triggered.
+
+- 2022-11-03 (bug #7360)
+  Building from source code was broken on Linux.
+
+- 2022-11-02 (bug #7361)
+  Using certain exotic script names in combination with shaping caused an
+  out-of-bounds read.
+
+- 2022-10-12 (bug #7354)
+  SVG color fonts with shared SVG documents for rendering multiple glyphs
+  were broken on EBCDIC platforms since the fix for bug #7268.
+
+
+==================================
+PDFlib 10.0.1 (September 22, 2022)
+==================================
+
+- 2022-09-22 (bug #7348)
+  The iSeries objects were associated with an unexpected user profile. Now the
+  object files belong to owner QPGMR.
+
+- 2022-09-22 (bug #7325)
+  Imported listbox fields without an appearance stream were rendered without
+  taking the /TI entry in the form field dictionary into account (which
+  corresponds to the "topindex" option of PDF_create_field()).
+
+- 2022-09-22 (feature #3009)
+  Added support for PHP 8.2.
+
+- 2022-09-22 (bug #7341)
+  The callout line of imported FreeText annotations was not placed correctly
+  and ended up at a wrong location on the output page if the imported page
+  contained a /Rotate key with a value different from 0.
+
+- 2022-09-21 (bug #7340)
+  When importing Line annotations with PDI the caption position could be wrong.
+
+- 2022-09-21 (bug #7294)
+  PostScript Type 1 fonts are not supported as host fonts on macOS. However,
+  they no longer trigger an exception but only a warning since they can still
+  be used as file-based fonts.
+
+- 2022-09-15 (feature #3016)
+  Updated to curl 7.85.0.
+
+- 2022-09-15 (bug #7330)
+  The PDFlib .NET binding did not work with current AWS Linux Lambda Docker
+  images.
+
+- 2022-09-15 (bug #7313)
+  The PHP binding was not working on RedHat Linux 8 for ARM 64.
+  
+- 2022-09-14 (bug #7332)
+  Changed the target moniker framework (TFM) entry in the .NET samples and
+  documentation to "<TargetFramework>net6.0</TargetFramework>".
+ 
+- 2022-09-06 (bug #7326)
+  With option "script=_auto" for Textline and Textflow output OpenType
+  features were applied in an unexpected way with certain fonts, which could
+  also thwart shaping.
+
+- 2022-08-21 (feature #2945)
+  Added correct table checksums to TrueType/OpenType fonts retrieved as
+  hostfonts on macOS.
+
+
+=================================
+PDFlib 10.0.0p6 (August 23, 2022)
+=================================
+
+- 2022-08-23 (bug #6915)
+  Reduced the memory usage for optimizing output documents.
+
+- 2022-08-22 (bug #7268)
+  Improved the performance for SVG color fonts when SVG documents are shared
+  for the rendering of multiple glyphs.
+
+- 2022-08-17 (bug #7168)
+  In Unicode-based bindings a wrong error message was produced if an
+  error message parameter was not valid UTF-8.
+
+- 2022-08-12 (bug #7128)
+  The default "_none" for the "script" option had caused unpredictable
+  application of OpenType features with certain fonts. The default value of the
+  script option was now changed to "latn".
+  
+- 2022-08-10 (bug #7299)
+  Fixed a problem with Textflow that caused leading spaces in justified or
+  left-aligned text after implicit line breaks.
+
+- 2022-08-08 (bug #7306)
+  The fact that PDF_load_font() options "subsetlimit" and "autosubsetting"
+  are deprecated and no longer functional since PDFlib 10 had not been
+  properly documented. These options are still accepted but have no effect.
+
+- 2022-08-05 (bug #7307)
+  Trying to produce a backslash in an option value in front of
+  the closing brace as documented with two backslashes caused an unexpected
+  exception.
+
+- 2022-08-01 (bug #7308)
+  Textflow save/restore did not work as expected for the following options:
+  adjustmethod, alignment, hyphenchar, tabalignchar, avoidemptybegin,
+  avoidbreak, minlinecount, minspacing, maxspacing, hortabsize, hortabmethod,
+  ruler, tabalignment, parindent, lastalignment, leftindent, tf_rightindent,
+  spreadlimit, nofitlimit, shrinklimit, fixedleading, mark, leader, shadow.
+
+
+===============================
+PDFlib 10.0.0p5 (July 27, 2022)
+===============================
+
+- 2022-07-27 (feature #2995)
+  Significantly improved PDI performance for reading huge arrays with object
+  references as they may appear in malformed PDF documents with tags or layers.
+
+- 2022-07-27 (bug #7312)
+  In the C++ wrapper avoid pollution of the global C++ namespace with the
+  "PDF" name.
+
+- 2022-07-27 (feature #3012)
+  Added support for Ruby 3.1.
+
+- 2022-07-25 (bug #7303)
+  Using option list delimiter characters in the text for a FreeText
+  annotation caused the unexpected exception "Internal error:
+  assertion failed in file 'p_annotap.c', line 951".
+
+- 2022-07-25 (bug #7300)
+  Updated to OpenSSL 1.1.1q.
+
+- 2022-07-21 (feature #3003)
+  Updated to curl 7.84.0. As a consequence networking support is no longer
+  available on System Z.
+
+- 2022-07-21 (bug #7157)
+  Fixed an inconsistency in TextFlow that trailing spaces were preserved
+  with centered and right-aligned text, while they were discarded with
+  left-aligned text. Now trailing spaces are preserved in all three cases.
+  This is relevant if trailing spaces are visible, e.g. by underlining or
+  when using matchboxes with visual appearances.
+
+- 2022-07-11 (feature #2985)
+  Updated to zlib 1.2.12.
+  
+- 2022-07-10 (feature #3004)
+  Implemented PDI optimizations for reading direct number and string objects
+  where the type and value are retrieved. Also, the dictionary vs. stream
+  check is eliminated to speed up processing of entities which are surely
+  not dictionaries such as some layer and Tagged PDF objects.
+
+- 2022-07-07 (bug #7301)
+  The thread-safe PDFlib library for PHP 7.3 and 7.4 on ARM64 has actually
+  been built in non-threadsafe mode.
+
+- 2022-07-03 (bug #7296)
+  Significantly mproved PDI performance for importing documents with layers
+  and tags by eliminating redundant collection of data for logging.
+
+- 2022-07-03 (feature #3001)
+  Significantly improved PDI performance for reading huge dictionaries as they
+  may appear in malformed PDF documents with layers or Tagged PDF properties
+  and rolemaps.
+
+- 2022-06-30 (bug #7289)
+  Fixed the problem that on some platforms the Python binding did only work
+  with specific Python versions.
+
+- 2022-06-30 (bug #7291)
+  Improved the performance of importing Tagged PDF.
+
+- 2022-06-26 (bug #7292)
+  Significantly improved PDI performance for reading huge dictionaries with
+  object references as they may appear in malformed PDF documents with layers. 
+
+- 2022-06-23 (bug #7288)
+  Fixed a crash that occurred when using tagging options in table functions
+  when no tagged PDF output was actually created.
+
+- 2022-06-23 (bug #7290)
+  Added support for Ruby 2.7 on FreeBSD.
+
+- 2022-06-23 (bug #7283)
+  Linker errors because of duplicate symbols could occur when linking an
+  application against PDFlib and the ICU library.
+
+
+===============================
+PDFlib 10.0.0p4 (June 14, 2022)
+===============================
+
+- 2022-06-14 (bug #7275)
+  Linker errors occurred when linking a Windows application against PDFlib
+  and the curl library because of duplicate symbols.
+  
+- 2022-06-09 (bug #7278)
+  The implementation of the SVG CSS property "font-weight" suffered from two
+  problems:
+  - The "font-weight" property was ignored unless also a "font-style" property
+    was present.
+  - The keywords "bold" and "normal" were not recognized.
+
+- 2022-06-01 (bug #7261)
+  Importing the layer structure of documents with an unreasonable amount of
+  layers could take very long. Now PDI ignores layers if the number of
+  layers in the document exceeds 250.
+
+- 2022-05-30 (bug #7269)
+  Placing an SVG graphics inside a template where a <text> element contained
+  only the Unicode character U+FEFF ZERO WIDTH NO-BREAK SPACE caused an
+  unexpected exception "fit_textline(blind): Function must not be called in
+  'template' scope".
+
+
+==============================
+PDFlib 10.0.0ME-p3 (May 19, 2022)
+==============================
+
+- 2022-05-19 (bug #7263)
+  Using PDF_begin_document() option "labels" while not also specifying option
+  "groups" resulted in the unexpected exception "Option 'labels' requires
+  suboption 'group' if used with this function".
+  
+- 2022-05-17 (bug #7266)
+  The parser for SVG glyph definitions in OpenType SVG color fonts made an
+  unwarranted assumption about the structure of SVG glyph definitions
+  containing multiple glyphs. When this assumption was violated, an unexpected
+  exception "Internal error: assertion failed in file 'svg_parse.c', ..."
+  occurred.
+
+
+==============================
+PDFlib 10.0.0p3 (May 13, 2022)
+==============================
+
+- 2022-05-13 (bug #7257)
+  Invalid PDF/UA output could be created with weakly structured PDF/UA output
+  when violating the header hierarchy, which was not rejected as required.
+  
+- 2022-05-13 (bug #7258)
+  Fixed a memory leak that could occur when an exception was thrown during
+  import of annotations.
+
+- 2022-05-13 (bug #7264)
+  The keywords "annotations" and "widgets" for option "taborder" of
+  PDF_begin_page_ext() and PDF_end_page_ext() did not work as expected for
+  PDF 2.0 output.
+
+- 2022-05-11 (bug #7259)
+  Fixed a performance problem in pCOS and PDI triggered by /Root dictionaries
+  containing a large number of direct objects.
+
+- 2022-05-06 (bug #7256)
+  U+200D ZERO WIDTH JOINER was replaced with a space glyph if the font did
+  not contain a glyph for U+200D. Now the glyph is dropped in this case
+  without a replacement.
+
+- 2022-05-06 (bug #7249)
+  Invalid PDF output was produced when using certain rare OpenType CFF CID
+  fonts with subsetting where the Private DICT data was not stored adjacent
+  to the Font DICT INDEX data. So far this was only observed with the
+  Noto Serif Japanese and Noto Sans Japanese fonts by Google that were produced
+  in 2015. Newer versions of these fonts do not trigger the problem.
+
+- 2022-05-05 (bug #7255)
+  Opening an image in info mode without closing the corresponding image
+  handle before a subsequent call to PDF_close_pdi_document() caused the
+  unexpected exception "Internal error: assertion failed in file 'p_pdi.c',
+  line 1941".
+  
+- 2022-05-05 (bug #7250)
+  Invalid PDF/UA output was created when importing pages from multiple
+  PDF/UA import documents where the heading levels on subsequent pages from
+  different documents violated the PDF/UA heading level requirements. Now this
+  problem is detected and an error message is produced.
+
+- 2022-04-28 (bug #7248)
+  Improved the error message when calling PDF_open_pdi_page() after opening
+  an encrypted document with PDF_open_pdi_document() with option
+  "requiredmode=minimum" and/or option "infomode=true" while not specifying
+  a password. The error message now says explicitly that this is not possible
+  in info mode.
+
+- 2022-04-28 (bug #7246)
+  Using the 32-bit .NET Universal package on Windows in Debug mode resulted
+  in the .NET runtime error message "A call to PInvoke function
+  'PDFlib_dotnet!PDFlib_dotnet.PDFlib+PInvoke::PDF_new_csharp' has unbalanced
+  the stack.
+
+- 2022-04-28 (bug #7242)
+  PDF_open_pdi_page() in PDF/UA mode didn't detect some structure problems
+  related to the heading hierarchy on the imported page vs. headings in the
+  output document:
+  
+  - Only the top element of the imported hierarchy was tested against the
+    existing header hierarchy, which could lead to incorrect acceptance of
+    the page.
+    
+  - The check for consistent heading levels was wrong if the output document
+    had been closed and more pages were imported into another output document
+    (e.g. when splitting a document page by page), which could lead to
+    incorrect acceptance of the page.
+
+  Both problems could result in PDF/UA validation errors of the generated
+  output document.
+
+- 2022-04-25 (bug #7241)
+  Importing a page containing a link twice from a PDF/UA-1 document into
+  a PDF/UA-1 output document resulted in invalid PDF/UA-1 output.
+
+- 2022-04-19 (bug #7243)
+  The Perl and Ruby bindings on macOS were not built as Universal macOS
+  Binaries.
+
+- 2022-04-01 (bug #7238)
+  When XMP document metadata was created and multiple document information
+  dictionary entries were created with non-ASCII keys, it could happen that
+  not all document information dictionary entries were mirrored in XMP.
+
+- 2022-03-28 (feature #2972)
+  Added several CJK fonts with builtin metrics which can be used without
+  external font files provided "embedding=false" is supplied.
+
+- 2022-03-17 (bug #7236)
+  The PDFlib 10.0.0p2 package for MVS was broken.
+
+
+================================
+PDFlib 10.0.0p2 (March 17, 2022)
+================================
+
+- 2022-03-17 (bug #7219)
+  The .NET Universal package was not working with the 32-bit .NET runtime.
+
+- 2022-03-17 (bug #7225)
+  A call to PDF_create_gstate() with log level "warning=3" triggered an
+  unjustified warning "Function must not be called in 'page' scope".
+
+- 2022-03-17 (bug #7233)
+  Restored support for Perl 5.26.
+
+- 2022-03-15 (bug #7232)
+  Linking with PDFlib on MVS failed because of unresolved symbols.
+
+- 2022-03-10 (bug #7228)
+  Calling PDF_info_textflow() with the "used" keyword after PDF_fit_textflow()
+  had been called another time after "_stop" had been returned by the preceding
+  call to PDF_fit_textflow() could cause an out-of-bounds read and potentially
+  a crash.
+
+- 2022-03-09 (bug #7227)
+  Caused by an incorrect mapping it could happen that the glyph U+1E9E LATIN
+  CAPITAL LETTER SHARP S was displayed when glyph U+00DF LATIN SMALL LETTER
+  SHARP S was requested if a glyph for U+1E9E was available in the font.
+
+- 2022-03-07 (bug #7224)
+  When the SVG "kerning" property contained an explicit length value the SVG
+  import still applied auto-kerning from font kerning tables if available. Now
+  the correct behavior is implemented that the "kerning" length value modifies
+  the inter-glyph spacing while font kerning tables are ignored.
+
+- 2022-03-04 (bug #7218)
+  Importing a tagged PDF document while creating tagged PDF output could
+  cause the unexpected exception "Internal error: assertion failed in file
+  'pc_output.c', line 3208".
+
+- 2022-03-04 (bug #7214)
+  When importing PDF documents with large tagged PDF data structures while
+  creating PDF/A-1 output it could happen that the PDF/A-1 limit of a maximum
+  of 8192 array elements was exceeded, resulting in invalid PDF/A-1 output.
+
+- 2022-03-04 (bug #7223)
+  For a font with kerning information it could happen that kerning was applied
+  although option "kerning=false" was set, for example with justified text
+  alignment or when option "xadvancelist" was specified. Also for SVG import
+  option "kerning=false" means now that font-based kerning according to
+  SVG property "kerning=auto" is not applied.
+
+- 2022-02-24 (bug #7216)
+  An empty /Next array in an action dictionary caused an unexpected
+  exception "Internal error: assertion failed in file 'pc_output.c', line 2843"
+  when importing the corresponding page with annotations.
+  
+
+===================================
+PDFlib 10.0.0p1 (February 15, 2022)
+===================================
+
+- 2022-02-15 (bug #7199)
+  When form fields were imported from a PDF page that was rotated via the
+  page dictionary's /Rotate key, the orientation of the resulting form fields
+  in the output was incorrect.
+
+- 2022-02-15 (bug #7209)
+  Using fit method "fit" or "slice" with PDF/UA output caused the unexpected
+  error message "Images and graphics must be tagged as 'Artifact', 'Figure' or
+  'Formula' in PDF/UA".
+  
+- 2022-02-15 (bug #7195)
+  When importing form fields from a document that contained the same form
+  field multiple times, this triggered the error message "name already exists
+  in the document". Now the field is imported once and subsequent instances
+  of the same field are ignored with a warning.
+
+- 2022-02-15 (bug #7206)
+  If an image contained a clipping path, a user-specified clipping path
+  specified via suboption "clipping" of PDF_fit_image() option "matchbox"
+  was ignored. Now both clipping paths are applied.
+ 
+- 2022-02-10 (bug #7202)
+  Creating too many tagged items of structure type "TOCI" could result in
+  an unexpected error message or a crash.
+
+- 2022-02-09 (bug #7200)
+  The Windows 64-bit package for PHP 8.1 x64 TS contained the 32-bit DLL
+  instead of the 64-bit variant.
+
+- 2022-02-07 (bug #7197)
+  The attempt to fill a form field that could not be imported resulted in the
+  unexpected error message "Parameter 'type' is empty". Now the fill attempt
+  is ignored with a warning.
+
+- 2022-02-04 (bug #7196)
+  Importing invalid check box form fields with inconsistent field
+  characteristics flags caused an error message "Font not specified for field
+  'C:N < 25'".
+
+- 2022-02-04 (bug #7194)
+  For source builds the OpenSSL sources are no longer distributed separately.
+  Now they are part of the PDFlib source package.
+
+- 2022-02-04 (bug #7191)
+  Importing invalid form fields with loops in the field hierarchy caused
+  the error message "Parameter 'type' is empty".
+
+- 2022-02-04 (bug #7189)
+  The PDFlib 10.0.0 .NET NuGet package contained an incorrect version
+  number in the package description.
+
+- 2022-02-04 (bug #7187)
+  Importing an annotation with a color value outside of the allowed range
+  between 0 and 1 caused an error message "Floating point parameter '...' has
+  bad value ..." in PDF_end_page_ext(). Now the color values are clamped to
+  the allowed range.
+
+- 2022-02-04 (bug #7186)
+  pCOS generates an artificial name for broken form fields that lack a
+  required /T entry. The attempt to fill such a field caused a crash.
+
+- 2022-02-04 (bug #7181)
+  When a name of an imported form field contained a '#' character, the
+  attempt to fill that field could fail with the error message
+  "Imported form field '...' does not exist (required for filling)".
+
+- 2022-02-02 (bug #7084)
+  Drop illegal trailing null bytes in the names of imported JavaScript and
+  other entries in the /Names tree to avoid creation of U+FFFD REPLACEMENT
+  CHARACTER in the output.
+
+- 2022-01-31 (bug #7142)
+  OpenType color fonts: kerning pairs involving the space glyph were missing
+  in the generated Type 3 font. 
+  
+- 2022-01-28 (bug #7179)
+  Creating an empty Type 3 font caused an unexpected exception.
+
+
+================================
+PDFlib 10.0.0 (January 25, 2022)
+================================
+
+- Implements a variety of new features and options, see PDFlib Tutorial
+  and API Reference for details.
+
+- Removes a number of long deprecated API methods and options; see
+  PDFlib Migration Guide for details.

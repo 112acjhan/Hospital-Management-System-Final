@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_annotation.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_array.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_binary.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_boolean.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_catalog.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_destination.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_dict.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_direct.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_doc_png.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_doc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_encoder_cns.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_encoder_cnt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_encoder_jp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_encoder_kr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_encoder_utf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_encoder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_encrypt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_encryptdict.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_error.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_ext_gstate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_font_cid.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_font_tt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_font_type1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_font.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_fontdef_base14.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_fontdef_cid.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_fontdef_cns.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_fontdef_cnt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_fontdef_jp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_fontdef_kr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_fontdef_tt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_fontdef_type1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_fontdef.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_gstate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_image_ccitt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_image_png.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_image.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_info.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_list.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_mmgr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_name.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_namedict.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_null.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_number.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_objects.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_outline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_page_label.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_page_operator.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_pages.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_real.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_shading.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_streams.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_string.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_u3d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_xref.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_pdfa.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_3dmeasure.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\hpdf_exdata.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\PC\Desktop\school project\cjh\cjh uni\year 2 sem 1\Workshop\Submission\C++\Hospital Management System.Final v1.1\libharu-libharu-0c598be\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{EC49EBA4-7577-3E86-A09A-490166B4290E}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

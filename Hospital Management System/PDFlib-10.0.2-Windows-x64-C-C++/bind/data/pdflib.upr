@@ -1,0 +1,53 @@
+PS-Resources-1.0
+
+% This is a sample UPR file for use with PDFlib. The complete description
+% of the UPR file format can be found in the PDFlib Tutorial.
+% All resources can also be set at runtime via PDF_set_option().
+% Some resources are also searched in the Windows registry.
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% List of all resource categories which are specified in the file
+
+SearchPath
+FontOutline
+Encoding
+ICCProfile
+.
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The SearchPath section.
+% PDFlib searches for any files (fonts, PDFs, ICC profiles, images)
+% in all the directories listed here. Modify as appropriate.
+
+SearchPath
+% /var/fonts
+% C:/fonts
+% d:/images
+.
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The TrueType and OpenType font outline section, one line per
+% font in the format
+% <fontname>=<filename>
+
+FontOutline
+.
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The Encoding section, one line per encoding in the format
+% <encodingname>=<filename>
+% This will only rarely be required.
+
+Encoding
+%cp0874=cp0874.cpg
+.
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The ICCProfile section lists the names of known ICC color profiles in the
+% format
+% <iccname>=<filename>
+
+ICCProfile
+%highspeedprinter=cmykhighspeed.icc
+.

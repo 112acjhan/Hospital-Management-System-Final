@@ -1,0 +1,43 @@
+Third-party components used in PDFlib GmbH products
+Last updated 2023-06-01
+
+                        Component is used in the following PDFlib GmbH products:
+                        
+Open-source software and data           Version     Release             PDFlib  PDI/PPS BlkPlug TET     IFilter PLOP    PLOP-DS
+-----------------------------                       date                10.0    10.0    6       5.4     5.4     5.5     5.5
+
+Adobe CMap resources                    n/a         2019-11-01          X*      X*              X*      X*
+AES, Arcfour and SHA algorithms         n/a         2002                X*      X*      X*      X*      X*      X*      X*
+Brotli decompression                    1.0.9       2020-08-27          X*      X*      X*      X*      X*
+Compact Language Detection (CLD)        n/a         2012                                                X*
+Curl multiprotocol file t. library      8.5.0       2023-12-11          X*      X*      X*                              X*
+Expat XML parser                        2.5.0       vi                  X*      X*      X*      X       X       X       X
+ICClib                                  2.21        2021-09-16          X       X       X       X       X       X       X
+ICU (Intern. Components for Unicode)    70.1        2021-10-27          X*      X*      X*      X       X       X       X
+ICU Layout Engine (LE)                  57.2        2019-04-11          X*      X*      X*
+libjpeg                                 9d          2020-01-12          X*      X*      X*      X*      X*      X*      X*
+libpng                                  1.6.37      2019-04-14          X*      X*      X*
+libtiff                                 4.6.0       2023-11-30          X*      X*      X*      X*
+MD5 message digest                      n/a         1992                X       X       X       X       X       X       X
+NotoSans fonts                          1.40        2014                X*      X*      X
+OpenJPEG library for JPEG2000           2.5.0       2020-12-29                  X*              X*      X*      X*      X*
+OpenSSL                                 1.1.1w      2023-12-14          X*      X*      X*                              X
+PKCS #11 Cryptographic Token Interface  2.20        2009                                                                X*
+sRGB v2 ICC profile                     v2          2016                X       X       X
+WOFF2 font decompression                n/a         2018-06-01          X*      X*      X*      X*      X*
+wxWidgets Cross-Platform GUI Library    3.1.5       2021-04-14                          X
+zlib compression/decompression library  1.2.13      2022-03-27          X       X       X       X       X       X       X
+
+
+Licensed spot color data
+------------------------
+HKS¨ spot color data                    n/a         2002                X**     X**
+PANTONE Matching System spot color data n/a         2001 - 2019         X**     X**
+
+
+
+X Component is used in precompiled versions of the PDFlib GmbH product as well as in source code editions with default configuration.
+
+* Source code editions of the PDFlib GmbH product can optionally be configured without this component.
+** Only used in precompiled versions of the PDFlib GmbH product; not available in source code editions.
+   PDFlib GmbH licensed spot color data from the respective license owners.

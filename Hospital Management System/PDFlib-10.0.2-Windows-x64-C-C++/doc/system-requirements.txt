@@ -1,0 +1,194 @@
+============================================
+System Requirements for PDFlib GmbH Products
+============================================
+
+Latest change: 2023-01-10
+
+This document describes the requirements for using PDFlib GmbH binaries on
+various platforms. This list covers all platforms on which at least one
+product is supported. It should not be construed as a commitment regarding
+the availability of a certain product/platform combination.
+
+To find out whether a PDFlib GmbH product is supported on a particular
+platform please check the downloadable binary packages at www.pdflib.com. 
+
+
+================================
+Java on all platforms
+================================
+Java 8 or above is required for the Java binding.
+
+
+================================
+Windows
+================================
+
+Requirements:
+Windows 10/11 on x86 or x64
+Windows Server 2012 and above on x86 or x64
+
+C and C++ bindings
+------------------
+The delivered binaries (libraries) can be used to build applications with
+Visual Studio and compatible products.
+
+Project files for the programming samples are available for Visual Studio 2015.
+Newer versions of Visual Studio convert these automatically.
+
+
+Embarcadero C++ Builder
+-----------------------
+In order to use the shared library with Embarcadero C++ Builder 64-bit you
+must create an import library from the DLL with the "mkexp" command, e.g.
+
+mkexp pdflib.lib pdflib.dll
+
+
+================================
+.NET
+================================
+The .NET binding is implemented as C# assembly using C# Interop with
+additional unmanaged code in a native shared library. It is distributed as
+universal package with support for the following environments:
+
+- Windows x86, Windows x64, Linux x64, macOS x64 and arm64, Alpine Linux x64
+- .NET Standard 2.0, e.g. .NET 6/7/8
+- .NET Framework 4.6.1 and above
+  (Visual Studio 2017 Version 15.7 or above)
+
+The examples are written for Target Framework net6.0 In order to deploy
+them with other Target Frameworks you may need to adjust the project files.
+
+
+================================
+Linux x64
+================================
+Requirements: GLIBC 2.12 or above and libstdc++.so.6.0.21 or above
+based system on x64
+
+C and C++ bindings
+------------------
+Compiler: g++ 5 or above
+binutils: 2.26 or above
+CFLAGS=-pthread
+LDFLAGS=-pthread
+
+
+================================
+Linux ARM64
+================================
+Requirements: GLIBC 2.27 or above based system on ARM64
+
+C and C++ bindings
+------------------
+Compiler: g++ 5 or above
+CFLAGS=-pthread
+LDFLAGS=-pthread
+
+
+================================
+Alpine Linux
+================================
+Requirements: Alpine Linux 3.4 and above on x64
+musl C library (instead of glibc)
+
+
+================================
+macOS
+================================
+Requirements: macOS 10.9 and above on x64/ARM64
+
+The Gatekeeper protection feature blocks unsigned applications. This applies
+to all PDFlib GmbH command line tools.
+
+If you want to use these tools you must inform the system that it is a
+safe application. Override Gatekeeper by Control-clicking the application
+icon and select "Open" from the top of the context menu.
+This must be done only once per user account.
+
+
+C, C++, and Objective-C bindings
+--------------------------------
+Compiler: Xcode 8 or above
+
+
+==================================
+FreeBSD
+==================================
+Requirements: FreeBSD 12/13 on x64
+
+
+================================
+AIX
+================================
+Requirements: AIX 7.2 and above
+
+C and C++ bindings
+------------------
+Compiler: xlclang/xlclang++ 16.1 and above
+
+
+Other language bindings
+-----------------------
+A C++ runtime implementation with support for C++11 and C++14 is required
+via a library called libc++.a. This library is available in a C++ runtime
+fileset called libc++.rte. Please refer to IBM documentation for more
+information.
+ 
+
+================================
+IBM System i
+================================
+Not all products are available for IBM System i. Please refer to
+www.pdflib.com regarding the use of AIX 32-bit binaries on i5 systems
+with PASE.
+
+Requirements: System i 7.2 and above
+
+Functional restrictions on System i:
+- ICU 50.1.1; only Unicode 6.2 supported
+- WOFF2-compressed fonts not supported
+- networking support not available
+- C-based PDI/pCOS resource manager implementation instead of faster C++
+  implementation
+- Decompression of JPEG 2000 streams not supported
+
+
+================================
+IBM System Z
+================================
+Requirements:
+z/OS 2.1 and above with USS (64-bit) or MVS (32-bit)
+
+Functional restrictions on System Z:
+- networking support not available
+
+
+C/C++ binding
+-------------
+The library for C/C++ has been built with xlclang++ (XL C/C++ V2.4.1 for
+z/OS V2.4). Applications must be linked with XPLINK.
+
+MVS
+---
+MVS versions of PDFlib GmbH products are not thread-safe.
+
+Functional restrictions on MVS:
+- ICU 50.1.1; only Unicode 6.2 supported
+- WOFF2-compressed fonts not supported
+- networking support not available
+- C-based PDI/pCOS resource manager implementation instead of faster C++
+  implementation
+
+
+================================
+zLinux
+================================
+Requirements:
+zLinux 64-bit (s390x)
+GLIBC 2.19 (or later) based system.
+
+
+C/C++ binding
+-------------
+CFLAGS/CXXFLAGS: -W "c,float(ieee)"

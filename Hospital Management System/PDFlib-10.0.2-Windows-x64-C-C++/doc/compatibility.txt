@@ -1,0 +1,47 @@
+API compatibility and Removal of deprecated API Features
+========================================================
+
+PDFlib 10 removes all API methods and options which have been designated
+as "deprecated" in PDFlib 9 or earlier. These methods and options must be
+replaced in application code before switching to PDFlib 10.
+
+The "PDFlib Migration Guide" contains a list of all affected methods and
+options along with their newer replacements. The Migration Guide also
+explains how to identify deprecated features in your application with
+PDFlib 9.3 (or above) before migrating to PDFlib 10.
+
+It is strongly recommended to review the Migration Guide and avoid the
+use of deprecated features in application code to ensure forward compatibility.
+
+
+PPS, PPS API, Block Plugin and Acrobat versions
+===============================================
+
+          PPS    Block     Acrobat                          Acrobat
+PPS       API    Plugin    Windows                          macOS
+---------------------------------------------------------------------------
+
+ 9.3.0     10     5.30     8,9,X,XI,DC 2020                 DC 2020
+ 9.3.1     10     5.31     8,9,X,XI,DC 2021 (32/64-bit)     DC 2021
+ 9.4.0     10     5.40     8,9,X,XI,DC 2021 (32/64-bit)     DC 2021
+10.0.0     11     6.0      8,9,X,XI,DC 2021 (32/64-bit)     DC 2021 
+10.0.1     11     6.1      8,9,X,XI,DC 2021 (32/64-bit)     DC 2021 
+10.0.2     11     6.2      8,9,X,XI,DC 2021 (32/64-bit)     DC 2021 
+
+
+PDFlib version numbers and .NET version numbers
+===============================================
+
+The .NET binding uses a distinct versioning scheme which differs from
+the PDFlib major/minor version numbers. The following table provides the
+mapping:
+
+
+PDFlib     .NET
+----------------
+ 9.3.0px   3.0.x
+ 9.3.1px   3.1.x
+ 9.4.0px   3.4.x
+10.0.0px   4.0.x
+10.0.1px   4.1.x
+10.0.2px   4.2.x
