@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <conio.h>
+#include <regex>
 #include "Account.h"
 
 /**********************************************************************************************************************/
@@ -55,6 +56,21 @@ bool IsEmpty(char input[])
     return input[0] == '\0';
 }
 
+bool isValidDateOfBirth(const std::string& dateOfBirth) {
+    const regex pattern(R"(^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$)");
+    return regex_match(dateOfBirth, pattern);
+}
+
+bool IsValidEmail(const string& email) {
+    const regex pattern(R"(([\w\.-]+)@([\w\.-]+)\.([a-zA-Z]{2,}))");
+    return regex_match(email, pattern);
+}
+
+bool IsValidContactNumber(const string& contactNumber) {
+    const regex pattern(R"(^(01\d-\d{7,8})$)");
+    return regex_match(contactNumber, pattern);
+}
+
 int Get_Row_Count(string query)
 {
     Sql_DB db;
@@ -91,7 +107,21 @@ void Account::Registration(string& message)
     int Registration_Id = 1;
     string errorMessage = "# Invalid registration";
     string correctMessage = "# Successfully registered";
-    bool isValid = true;
+    string errorType;
+    bool isValid = true, correctFormat = true;
+
+    if (!isValidDateOfBirth(DOB)) {
+        correctFormat = false;
+        errorType = ": Invalid Date of Birth Format.";
+    }
+    else if (!IsValidEmail(Email)) {
+        correctFormat = false;
+        errorType = ": Invalid Email Format.";
+    }
+    else if (!IsValidContactNumber(Contact_Number)){
+        correctFormat = false;
+        errorType = ": Invalid Contact Number Format.";
+    }
 
     db.PrepareStatement("SELECT Registration_Id FROM registration");
     db.QueryResult();
@@ -112,7 +142,7 @@ void Account::Registration(string& message)
     }
     db.PrepareStatement(query);
 
-    if (db.statement)
+    if (correctFormat)
     {
         db.statement->setInt(1, Registration_Id);
         IsEmpty(Name) ? db.statement->setNull(2, sql::DataType::VARCHAR) : db.statement->setString(2, Name);
@@ -126,7 +156,7 @@ void Account::Registration(string& message)
         IsEmpty(Role) ? db.statement->setNull(10, sql::DataType::VARCHAR) : db.statement->setString(10, Role);
         IsEmpty(Contact_Number) ? db.statement->setNull(11, sql::DataType::VARCHAR) : db.statement->setString(11, Contact_Number);
         IsEmpty(Email) ? db.statement->setNull(12, sql::DataType::VARCHAR) : db.statement->setString(12, Email);
-        IsEmpty(Password) ? db.statement->setNull(13, sql::DataType::VARCHAR) : db.statement->setString(13, encrypt(Password));
+        IsEmpty(Password) ? db.statement->setNull(13, sql::DataType::VARCHAR) : db.statement->setString(13, Password);
 
         // Only set the Manage_By parameter if it's not empty
         if (Manage_By[0] != '\0')
@@ -142,15 +172,16 @@ void Account::Registration(string& message)
         {
             isValid = false;
         }
+    }
+    else { isValid = false; }
 
-        if (isValid == true)
-        {
-            message = correctMessage;
-        }
-        else
-        {
-            message = errorMessage;
-        }
+    if (isValid == true)
+    {
+        message = correctMessage;
+    }
+    else
+    {
+        message = errorMessage + errorType;
     }
 }
 
@@ -186,9 +217,23 @@ bool Account::Login()
 void Account::Update(string& message)
 {
     Sql_DB db;
-    bool isValid = true;
+    bool isValid = true, correctFormat = true;
     string errorMessage = "# Invalid update";
     string correctMessage = "# Updated successfull";
+    string errorType;
+
+    if (!isValidDateOfBirth(DOB)) {
+        correctFormat = false;
+        errorType = ": Invalid Date of Birth Format.";
+    }
+    else if (!IsValidEmail(Email)) {
+        correctFormat = false;
+        errorType = ": Invalid Email Format.";
+    }
+    else if (!IsValidContactNumber(Contact_Number)) {
+        correctFormat = false;
+        errorType = ": Invalid Contact Number Format.";
+    }
 
     // Construct the SQL query dynamically
     string query = "UPDATE staff SET Name = ?, DOB = ?, Gender = ?, Race = ?, Religion = ?, Address = ?, Salary = ?, Role = ?, Contact_Number = ?, Email = ?, Manage_By = ";
@@ -202,7 +247,7 @@ void Account::Update(string& message)
     }
     db.PrepareStatement(query);
 
-    if (db.statement)
+    if (correctFormat)
     {
         IsEmpty(Name) ? db.statement->setNull(1, sql::DataType::VARCHAR) : db.statement->setString(1, Name);
         IsEmpty(DOB) ? db.statement->setNull(2, sql::DataType::VARCHAR) : db.statement->setString(2, DOB);
@@ -234,15 +279,16 @@ void Account::Update(string& message)
         {
             isValid = false;
         }
+    }
+    else { isValid = false; }
 
-        if (isValid == true)
-        {
-            message = correctMessage;
-        }
-        else
-        {
-            message = errorMessage;
-        }
+    if (isValid == true)
+    {
+        message = correctMessage;
+    }
+    else
+    {
+        message = errorMessage + errorType;
     }
 }
 
@@ -437,6 +483,24 @@ void Nurse::AddNewPatient(Patient patient)
 {
     Sql_DB db;
     int patient_id = 0, appointment_id = 0;
+    bool isExist = false, correctFormat = true;
+    string q1 = "SELECT * FROM patient WHERE IC = '";
+    string q2 = "'";
+    string errorType;
+    Get_Row_Count(q1 + patient.IC + q2) > 0 ? isExist = true : isExist = false;
+
+    if (!isValidDateOfBirth(patient.DOB)) {
+        correctFormat = false;
+        errorType = "Invalid Date of Birth Format. ";
+    }
+    else if (!IsValidEmail(patient.Email)) {
+        correctFormat = false;
+        errorType = "Invalid Email Format. ";
+    }
+    else if (!IsValidContactNumber(patient.Contact_Number)) {
+        correctFormat = false;
+        errorType = "Invalid Contact Number Format. ";
+    }
 
     db.PrepareStatement("SELECT MAX(Patient_Id) AS patientCount FROM patient");
     db.QueryResult();
@@ -462,31 +526,51 @@ void Nurse::AddNewPatient(Patient patient)
         }
     }
 
-    db.PrepareStatement("INSERT INTO patient VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DEFAULT)");
-    db.statement->setString(1, to_string(patient_id));
-    IsEmpty(patient.Name) ? db.statement->setNull(2, sql::DataType::VARCHAR) : db.statement->setString(2, patient.Name);
-    db.statement->setString(3, patient.DOB);
-    IsEmpty(patient.Gender) ? db.statement->setNull(4, sql::DataType::VARCHAR) : db.statement->setString(4, patient.Gender);
-    IsEmpty(patient.Race) ? db.statement->setNull(5, sql::DataType::VARCHAR) : db.statement->setString(5, patient.Race);
-    IsEmpty(patient.Religion) ? db.statement->setNull(6, sql::DataType::VARCHAR) : db.statement->setString(6, patient.Religion);
-    IsEmpty(patient.Address) ? db.statement->setNull(7, sql::DataType::VARCHAR) : db.statement->setString(7, patient.Address);
-    IsEmpty(patient.IC) ? db.statement->setNull(8, sql::DataType::VARCHAR) : db.statement->setString(8, patient.IC);
-    IsEmpty(patient.Contact_Number) ? db.statement->setNull(9, sql::DataType::VARCHAR) : db.statement->setString(9, patient.Contact_Number);
-    IsEmpty(patient.Email) ? db.statement->setNull(10, sql::DataType::VARCHAR) : db.statement->setString(10, patient.Email);
+    if (correctFormat) {
+        db.PrepareStatement("INSERT INTO patient VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DEFAULT)");
+        db.statement->setString(1, to_string(patient_id));
+        IsEmpty(patient.Name) ? db.statement->setNull(2, sql::DataType::VARCHAR) : db.statement->setString(2, patient.Name);
+        db.statement->setString(3, patient.DOB);
+        IsEmpty(patient.Gender) ? db.statement->setNull(4, sql::DataType::VARCHAR) : db.statement->setString(4, patient.Gender);
+        IsEmpty(patient.Race) ? db.statement->setNull(5, sql::DataType::VARCHAR) : db.statement->setString(5, patient.Race);
+        IsEmpty(patient.Religion) ? db.statement->setNull(6, sql::DataType::VARCHAR) : db.statement->setString(6, patient.Religion);
+        IsEmpty(patient.Address) ? db.statement->setNull(7, sql::DataType::VARCHAR) : db.statement->setString(7, patient.Address);
+        // IsEmpty(patient.IC) ? db.statement->setNull(8, sql::DataType::VARCHAR) : db.statement->setString(8, patient.IC);
 
-    //Prevent run the Add new patient only
-    if (IsEmpty(patient.Appoint_With))
-    {
-        db.statement->setNull(10, sql::DataType::VARCHAR);
+        if (IsEmpty(patient.IC)) {
+            db.statement->setNull(8, sql::DataType::VARCHAR);
+        }
+        else if (isExist) {
+            db.statement->setNull(8, sql::DataType::VARCHAR);
+            cout << "Patient already exist. ";
+        }
+        else
+        {
+            db.statement->setString(8, patient.IC);
+        }
+
+        IsEmpty(patient.Contact_Number) ? db.statement->setNull(9, sql::DataType::VARCHAR) : db.statement->setString(9, patient.Contact_Number);
+        IsEmpty(patient.Email) ? db.statement->setNull(10, sql::DataType::VARCHAR) : db.statement->setString(10, patient.Email);
+
+        //Prevent run the Add new patient only
+        if (IsEmpty(patient.Appoint_With))
+        {
+            db.statement->setNull(10, sql::DataType::VARCHAR);
+        }
+
+        db.statement->executeUpdate();
+
+        db.PrepareStatement("INSERT INTO appointment VALUES(?, ?, ?, DEFAULT)");
+        db.statement->setString(1, to_string(appointment_id));
+        db.statement->setString(2, to_string(patient_id));
+        IsEmpty(patient.Appoint_With) ? db.statement->setNull(3, sql::DataType::VARCHAR) : db.statement->setString(3, patient.Appoint_With);
+        db.statement->executeUpdate();
     }
-    
-    db.statement->executeUpdate();
-
-    db.PrepareStatement("INSERT INTO appointment VALUES(?, ?, ?, DEFAULT)");
-    db.statement->setString(1, to_string(appointment_id));
-    db.statement->setString(2, to_string(patient_id));
-    IsEmpty(patient.Appoint_With) ? db.statement->setNull(3, sql::DataType::VARCHAR) : db.statement->setString(3, patient.Appoint_With);
-    db.statement->executeUpdate();
+    else
+    {
+        cout << errorType;
+        throw sql::SQLException();
+    }
 
 }
 

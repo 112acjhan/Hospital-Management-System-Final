@@ -393,9 +393,10 @@ int main()
 										{
 										case 0:
 										{
-											string transaction_no = hr_menu.Get_List("SELECT * FROM transaction_record WHERE Date LIKE '" + date + "%'",
+											/*string transaction_no = hr_menu.Get_List("SELECT * FROM transaction_record WHERE Date LIKE '" + date + "%'",
 												"Transaction_Id", "Description", "Total_Price",
-												"                                             VIEW TRANSACTION RECORD                                             ");
+												"                                             VIEW TRANSACTION RECORD                                             ");*/
+											hr_menu.Selected_Transaction_Record(date);
 											break;
 										}
 										case 1:
@@ -578,7 +579,7 @@ int main()
 								{
 									string patientRecord_no = nurse_menu.Get_List("SELECT Record_Id AS PR_Id, Name, Date FROM patient_record PR LEFT JOIN patient P ON PR.Patient_Id = P.Patient_Id WHERE Payment_Status = 'N'",
 										"PR_Id", "Date",
-										"                                                   PATIENT RECORD                                                ", "");
+										"                                                   PATIENT RECORD                                                ", "Discharge");
 
 									if (!patientRecord_no.empty()) { nurse_menu.Selected_Discharge(nr, patientRecord_no); }
 									else { selecting = false; }

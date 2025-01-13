@@ -7,9 +7,12 @@
 #include <sstream> //Used stringstream
 #include <iomanip> //Used for setprecision
 #include <cmath> //Used for abs
+#include <pdflib.hpp>
+#include <codecvt> // wstring convertor
 
 using namespace std;
 using std::cout;
+using namespace pdflib;
 
 /**********************************************************************************************************************/
 //User defined function
@@ -2356,7 +2359,6 @@ int HR_Menu::Operations_Menu(HR usedAccount)
 int HR_Menu::Report_Menu(HR usedAccount)
 {
 	system("cls");
-	Sql_DB db;
 	int option = 0, optionStart = 0, optionEnd = 2;
 	string selected = BWHITE_TEXT + BOLD;
 	string not_selected = GRAY_TEXT;
@@ -2417,10 +2419,12 @@ string HR_Menu::Report_Select_Menu(int option) // NEWEST
 	while (db.result->next())
 	{
 		years[i] = db.result->getString("years");
+		i++;
 	}
 
 	//Months array
-	string months[13] = { "", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec" }; // Extra for empty space, if the month is empty which user want years report
+	// Extra for empty space, if the month is empty which user want years report
+	string months[13] = { "", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec" }; 
 
 	if (option == 0) // Transaction and Business Record
 	{
@@ -2718,7 +2722,7 @@ void HR_Menu::Register_Detail(string query, int number, Account& account_detaile
 	cout << "  Role           : " << account_detailed.Role << endl;
 	cout << "  Contact Number : " << account_detailed.Contact_Number << endl;
 	cout << "  Email          : " << account_detailed.Email << endl;
-	cout << "  Password       : " << account_detailed.decrypt(account_detailed.Password) << endl;
+	cout << "  Password       : " << account_detailed.Password << endl;
 	cout << "  Manage By      : " << account_detailed.Manage_By << endl;
 	cout << "  Approved By    : " << account_detailed.Approved_By << endl;
 	cout << "  Status         : " << account_detailed.Status << endl << endl;
@@ -3546,6 +3550,171 @@ void HR_Menu::Selected_BusinessReport(string year)
 	} while (!exit);
 }
 
+void HR_Menu::Selected_Transaction_Record(string year) {
+	system("cls");
+	int selected = 0;
+	Sql_DB db;
+	string months[12] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+
+	cout << "\n\n";
+	cout << "                                            HMS Transaction Record\n\n"
+		<< "Year: " << year << endl
+		<< "================================================================================================================\n"
+		<< "     " << setw(15) << left << "Trans. ID"
+		<< setw(30) << right << "Transaction Description"
+		<< setw(30) << "Date"
+		<< setw(30) << "Total Price" << "\n"
+		<< "     " << setw(15) << left << ""
+		<< setw(30) << right << "       "
+		<< setw(30) << "       "
+		<< setw(30) << "(RM)   " << "\n"
+		<< "----------------------------------------------------------------------------------------------------------------\n";
+
+	// Print out the Transaction Record
+	db.PrepareStatement("SELECT * FROM transaction_record WHERE Date LIKE '" + year + "%'");
+	db.QueryResult();
+
+	double total_income = 0;
+	double total_expenses = 0;
+
+	while (db.result->next()) {
+		cout << "     " << setw(15) << left << db.result->getInt("Transaction_Id")
+			<< setw(30) << right << db.result->getString("Description")
+			<< setw(30) << db.result->getString("Date")
+			<< setw(30) << fixed << setprecision(2) << db.result->getDouble("Total_Price") << "\n";
+
+		if (db.result->getDouble("Total_Price") > 0) { total_income += db.result->getDouble("Total_Price"); }
+		else { total_expenses -= db.result->getDouble("Total_Price"); }
+	}
+
+
+	cout << "\n----------------------------------------------------------------------------------------------------------------\n\n";
+	cout << "     " << setw(15) << left << "Total (RM) "
+		<< setw(30) << right << " "
+		<< setw(60) << " "
+		<< setw(30) << fixed << setprecision(2) << total_income - total_expenses << "\n\n";
+
+	cout << "================================================================================================================\n\n";
+
+	cout << "\n\n";
+	cout << "     ";
+	cout << selected << "> Save as pdf" << RESET << endl;
+
+	bool exit = false;
+
+	auto to_wstring = [](string input) -> wstring {
+		wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
+		return converter.from_bytes(input);
+		};
+
+	auto c_to_string = [](wstring input) -> string {
+		wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
+		return converter.to_bytes(input);
+		};
+
+	auto format_column = [](wstring& text, int width) -> wstring {
+		std::wstringstream ss;
+		if (text.length() > width) {
+			ss << text.substr(0, width - 3) << L"..."; // Truncate and add ellipsis if too long
+		}
+		else {
+			ss << std::setw(width) << std::left << text; // Pad if too short } return ss.str();
+		}
+
+		return ss.str();
+		};
+
+	auto format_price = [](double price) -> wstring {
+		std::wstringstream ss;
+		ss << std::fixed << std::setprecision(2) << price;
+		return ss.str();
+
+		};
+
+	do
+	{
+		switch (_getch())
+		{
+		case KEY_ENTER:
+			try {
+				PDFlib p;
+				// wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
+
+				if (p.begin_document(to_wstring("transaction_record.pdf"), to_wstring("")) == -1) {
+					throw runtime_error(c_to_string(p.get_errmsg()));
+				}
+
+				// p.set_info("Creator", "Your Name");
+				p.set_info(to_wstring("Title"), to_wstring("Transaction Record"));
+				p.begin_page_ext(595, 842, to_wstring(""));
+				int font = p.load_font(to_wstring("Helvetica"), to_wstring("winansi"), to_wstring(""));
+
+				// Set up your database connection and retrieve records here
+				Sql_DB db;
+				db.PrepareStatement("SELECT * FROM transaction_record WHERE Date LIKE '" + year + "%'");
+				db.QueryResult();
+
+				// Add the header
+				p.setfont(font, 10);
+				p.show_xy(to_wstring("                                            HMS Transaction Record"), 50, 800);
+				p.show_xy(to_wstring("Year: " + year), 50, 780);
+				p.show_xy(to_wstring("===================================================================================="), 50, 760);
+				p.show_xy(to_wstring("Trans. ID        Transaction Description                                                        Date                       Total Price (RM)"), 50, 740);
+				p.show_xy(to_wstring("===================================================================================="), 50, 720);
+
+				// Print out the Transaction Record
+				int y = 700;
+
+				while (db.result->next()) {
+					wstring trans_id = to_wstring(to_string(db.result->getInt("Transaction_Id")));
+					wstring description = to_wstring(db.result->getString("Description"));
+					wstring date = to_wstring(db.result->getString("Date"));
+					wstring total_price = format_price(db.result->getDouble("Total_Price"));
+
+					// Format each column
+					wstring trans_id_col = format_column(trans_id, 5);
+					wstring description_col = format_column(description, 30);
+					wstring date_col = format_column(date, 10);
+					wstring total_price_col = format_column(total_price, 10);
+
+					// Calculate positions for each column 
+					int x = 50; p.show_xy(format_column(trans_id, 5).c_str(), x, y);
+					x += 65;
+					p.show_xy(format_column(description, 30).c_str(), x, y);
+					x += 260;
+					p.show_xy(format_column(date, 10).c_str(), x, y);
+					x += 100;
+					p.show_xy(format_column(total_price, 10).c_str(), x, y);
+
+					y -= 20;
+
+				}
+
+				// Add the total
+				y -= 20;
+				p.show_xy(to_wstring("===================================================================================="), 50, y);
+				y -= 20;
+				p.show_xy(to_wstring("Total (RM)                                                                                                                                        ") + format_price(total_income - total_expenses), 50, y);
+
+				p.end_page_ext(to_wstring(""));
+				p.end_document(to_wstring(""));
+			}
+			catch (PDFlib::Exception& ex) {
+				cerr << "PDFlib Exception occurred in file " << __FILE__ << " at line " << __LINE__ << ":" << endl;
+				cerr << "[" << ex.get_errnum() << "] " << c_to_string(ex.get_apiname()) << ": "
+					<< c_to_string(ex.get_errmsg()) << endl;
+			}
+			exit = true;
+			break;
+
+		case KEY_ESCAPE:
+			exit = true;
+			break;
+		}
+	} while (!exit);
+
+}
+
 void HR_Menu::Selected_GenerateBarChart(string year)
 {
 	system("cls");
@@ -3851,6 +4020,20 @@ string Nurse_Menu::Get_List(string query, string first_column, string third_colu
 					delete[]name;
 					delete[]third_column_showed;
 					return id[option];
+				}
+
+				if (additionalOption == "Discharge") {
+					// Check patient already have pharmacy record or not
+					string q1 = "SELECT * FROM pharmacy_record WHERE Record_Id = '";
+					string q2 = "'";
+					if (Get_RowCount(q1 + id[option] + q2) == 0) {
+						Erase_Lines(0, 1);
+						cout << "This patient dont have pharmacy record yet!\n";
+						_getch();
+					}
+					else {
+						return id[option];
+					}
 				}
 
 				if (additionalOption == "Add new patient")
@@ -4575,7 +4758,7 @@ void Nurse_Menu::Selected_PatientAdd(string patient_no)
 						}
 						catch (sql::SQLException& e)
 						{
-							cout << "Invalid, something is wrong.";
+							cout << "Invalid input.";
 							valid = false;
 							_getch();
 						}
@@ -4907,6 +5090,13 @@ void Nurse_Menu::Selected_Discharge(Nurse nr, string patientRecord_no)
 		db.result->next();
 		admit_date = db.result->getString("Admission_Date");
 		bed_price = db.result->getDouble("Bed_Price");
+	}
+	else // If no admit date, then it is the patient record date
+	{
+		db.PrepareStatement("SELECT * FROM patient_record WHERE Patient_Id = '" + patient_no + "' AND Payment_Status = 'N'");
+		db.QueryResult();
+		db.result->next();
+		admit_date = db.result->getString("Date");
 	}
 
 	//Get the total medication price
@@ -5541,7 +5731,31 @@ void Pharmacist_Menu::Selected_AddMedicationRecord(Pharmacist pmc, string pharma
 		}
 	}
 
-	cout << "Create medication report" << endl
+	try {
+		db.PrepareStatement("SELECT p.Name, pr.* FROM pharmacy_record phr JOIN patient_record pr ON phr.Record_Id = pr.Record_Id JOIN patient p ON pr.Patient_Id = p.Patient_Id WHERE phr.PharmacyRecord_Id = ?");
+		db.statement->setString(1, pharmacyRecord_no);
+		db.QueryResult();
+		db.result->next();
+
+		cout << "Patient Record" << endl
+			<< "=======================================================================================\n\n"
+			<< "Name: " << db.result->getString("Name") << "\n\n"
+			<< "Date: " << db.result->getString("Date") << "\n\n"
+			<< "Diagnosis: " << db.result->getString("Diagnosis") << "\n\n"
+			<< "Treatment: " << db.result->getString("Treatment") << "\n\n"
+			<< "Description: " << db.result->getString("Description") << "\n\n"
+			<< "=======================================================================================\n\n\n\n";
+	}
+	catch (sql::SQLException e) {
+		cout << "#ERR: SQLException in " << __FILE__
+			<< "(" << __FUNCTION__ << ") on file " << __LINE__ << endl
+			<< "# ERR: " << e.what()
+			<< " (MySQL error code: " << e.getErrorCode()
+			<< ", SQLState: " << e.getSQLState() << ")" << endl;
+		_getch();
+	}
+
+	cout << "Create medication record" << endl
 		<< "=======================================================================================\n\n";
 
 	do

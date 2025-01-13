@@ -118,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\mysql-connector-c++-8.3.0-winx64\include;$(ProjectDir)\PDFlib-10.0.2-Windows-x64-C-C++\bind\cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\mysql-connector-c++-8.3.0-winx64\include;$(ProjectDir)\PDFlib-10.0.2-Windows-x64-C-C++\bind\cpp;$(ProjectDir)\PDFlib-10.0.2-Windows-x64-C-C++\pdflib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

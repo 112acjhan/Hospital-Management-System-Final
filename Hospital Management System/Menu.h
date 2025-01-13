@@ -62,6 +62,7 @@ class HR_Menu
 		void Selected_Update_Employee(HR hr, string staff_no);
 		void Selected_Delete_Employee(HR hr, string staff_no);
 		void Selected_View_Employee(HR hr, bool& exit);
+		void Selected_Transaction_Record(string year);
 		void Selected_BusinessReport(string year);
 		void Selected_GenerateBarChart(string year);
 };
