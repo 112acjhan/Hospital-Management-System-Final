@@ -4460,6 +4460,7 @@ void Nurse_Menu::Selected_PatientAdmit(string patient_no)
 					string query = "SELECT * FROM Staff WHERE Role = 'Doctor'";
 					int row_count = Get_RowCount(query) + 1;
 					string* Doctor_Id = new string[row_count]; //dynamic array
+					string* Doctor_Name = new string[row_count];
 
 					//Get the Doctor's id
 					db.PrepareStatement(query);
@@ -4471,6 +4472,7 @@ void Nurse_Menu::Selected_PatientAdmit(string patient_no)
 						while (db.result->next())
 						{
 							Doctor_Id[i] = db.result->getString("Staff_Id");
+							Doctor_Name[i] = db.result->getString("Name");
 							i++;
 						}
 					}
@@ -4478,7 +4480,7 @@ void Nurse_Menu::Selected_PatientAdmit(string patient_no)
 					while (!exit)
 					{
 						Erase_Lines(0, 2);
-						string showed = "  < " + Doctor_Id[option_AppointWith] + " >";
+						string showed = "  < " + Doctor_Name[option_AppointWith] + " >";
 						strcpy_s(patient.Appoint_With, size, showed.c_str());
 
 						cout << (option == 0 ? selected : not_selected) << "Have appoinment with : " << showed << endl;
@@ -4490,6 +4492,7 @@ void Nurse_Menu::Selected_PatientAdmit(string patient_no)
 
 					//delete dynamic array
 					delete[] Doctor_Id;
+					delete[] Doctor_Name;
 				}
 				else if (option == 1)
 				{
@@ -4721,6 +4724,7 @@ void Nurse_Menu::Selected_PatientAdd(string patient_no)
 						string query = "SELECT * FROM Staff WHERE Role = 'Doctor'";
 						int row_count = Get_RowCount(query) + 1;
 						string* Doctor_Id = new string[row_count]; //dynamic array
+						string* Doctor_Name = new string[row_count];
 
 						//Get the Doctor's id
 						db.PrepareStatement(query);
@@ -4732,13 +4736,14 @@ void Nurse_Menu::Selected_PatientAdd(string patient_no)
 							while (db.result->next())
 							{
 								Doctor_Id[i] = db.result->getString("Staff_Id");
+								Doctor_Name[i] = db.result->getString("Name");
 								i++;
 							}
 						}
 
 						while (!exit)
 						{
-							string showed = "  < " + Doctor_Id[option_AppointWith] + " >";
+							string showed = "  < " + Doctor_Name[option_AppointWith] + " >";
 							strcpy_s(patient.Appoint_With, size, showed.c_str());
 							PatientAdd_Option_Menu(option, selected, not_selected, patient);
 							inputOperations::Available_Input(exit, Doctor_Id, row_count, option_AppointWith, patient.Appoint_With, size);
@@ -4747,6 +4752,7 @@ void Nurse_Menu::Selected_PatientAdd(string patient_no)
 
 						//delete dynamic array
 						delete[] Doctor_Id;
+						delete[] Doctor_Name;
 						break;
 					}
 					case 10:

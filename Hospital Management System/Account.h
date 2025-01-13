@@ -55,7 +55,7 @@ class Patient : public Account
 {
 protected:
 	char Patient_Id[12] = {};
-	char Appoint_With[20] = {};
+	char Appoint_With[50] = {};
 
 public:
 	friend class Nurse;
