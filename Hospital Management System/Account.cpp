@@ -2,6 +2,10 @@
 #include <string>
 #include <conio.h>
 #include <regex>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
+#include <vector>
 #include "Account.h"
 
 /**********************************************************************************************************************/
@@ -483,15 +487,15 @@ void Nurse::AddNewPatient(Patient patient)
 {
     Sql_DB db;
     int patient_id = 0, appointment_id = 0;
-    bool isExist = false, correctFormat = true;
+    bool isExist = false, correctFormat = true, detectEmpty = false;
     string q1 = "SELECT * FROM patient WHERE IC = '";
     string q2 = "'";
     string errorType;
     Get_Row_Count(q1 + patient.IC + q2) > 0 ? isExist = true : isExist = false;
 
-    if (!isValidDateOfBirth(patient.DOB)) {
+    if (!isValidDateOfBirth(patient.DOB) || !isValidDateOfBirth(patient.Appoint_Date)) {
         correctFormat = false;
-        errorType = "Invalid Date of Birth Format. ";
+        errorType = "Invalid Date Format. ";
     }
     else if (!IsValidEmail(patient.Email)) {
         correctFormat = false;
@@ -526,45 +530,256 @@ void Nurse::AddNewPatient(Patient patient)
         }
     }
 
-    if (correctFormat) {
-        db.PrepareStatement("INSERT INTO patient VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DEFAULT)");
-        db.statement->setString(1, to_string(patient_id));
-        IsEmpty(patient.Name) ? db.statement->setNull(2, sql::DataType::VARCHAR) : db.statement->setString(2, patient.Name);
-        db.statement->setString(3, patient.DOB);
-        IsEmpty(patient.Gender) ? db.statement->setNull(4, sql::DataType::VARCHAR) : db.statement->setString(4, patient.Gender);
-        IsEmpty(patient.Race) ? db.statement->setNull(5, sql::DataType::VARCHAR) : db.statement->setString(5, patient.Race);
-        IsEmpty(patient.Religion) ? db.statement->setNull(6, sql::DataType::VARCHAR) : db.statement->setString(6, patient.Religion);
-        IsEmpty(patient.Address) ? db.statement->setNull(7, sql::DataType::VARCHAR) : db.statement->setString(7, patient.Address);
-        // IsEmpty(patient.IC) ? db.statement->setNull(8, sql::DataType::VARCHAR) : db.statement->setString(8, patient.IC);
+    if (IsEmpty(patient.Name) || IsEmpty(patient.DOB) || IsEmpty(patient.Gender) || IsEmpty(patient.Race) || IsEmpty(patient.Religion) || IsEmpty(patient.Address) || IsEmpty(patient.IC) || IsEmpty(patient.Appoint_With)) {
+        detectEmpty = true;
+    }
+    
 
-        if (IsEmpty(patient.IC)) {
-            db.statement->setNull(8, sql::DataType::VARCHAR);
+    if (correctFormat && !detectEmpty) {
+
+        // Appointment time schedule
+        system("cls");
+        Sql_DB db;
+        cout << "Appointment Time Schedule\n"
+            << "=======================================================================================\n\n";
+
+        // Get time schedule for that doctor on that room
+        db.PrepareStatement("SELECT Room_Id, Time_from, Time_to, CASE WHEN Time_from < Time_to THEN (HOUR(Time_to) * 60 + MINUTE(Time_to) - HOUR(Time_from) * 60 - MINUTE(Time_from)) / 30 ELSE ((HOUR(Time_to) * 60 + MINUTE(Time_to) + 24 * 60) - (HOUR(Time_from) * 60 + MINUTE(Time_from))) / 30 END AS num_appointments FROM room WHERE Staff_Id = ?");
+        db.statement->setString(1, patient.Appoint_With);
+        db.QueryResult();
+        db.result->next();
+
+        struct Time {
+            int hour;
+            int minute;
+        };
+
+        auto parseTime = [](const std::string& timeStr) -> Time {
+            int hour, minute;
+            char colon;
+            std::istringstream timeStream(timeStr);
+            timeStream >> hour >> colon >> minute;
+            return { hour, minute };
+            };
+
+        auto timeToMinutes = [](const Time& time) -> int {
+            return time.hour * 60 + time.minute;
+            };
+
+        Time startTime = parseTime(db.result->getString("Time_from"));
+        Time endTime = parseTime(db.result->getString("Time_to"));
+
+        int startMinutes = timeToMinutes(startTime);
+        int endMinutes = timeToMinutes(endTime);
+
+        // Handle the case where end time is on the next day
+        if (endMinutes < startMinutes) {
+            endMinutes += 24 * 60;  // Add 24 hours
         }
-        else if (isExist) {
-            db.statement->setNull(8, sql::DataType::VARCHAR);
-            cout << "Patient already exist. ";
+
+        int slot = 0;
+        vector<string> timeSlots;
+        string q1 = "[slot ";
+        string q2 = "]";
+
+        std::cout << "Time slots:" << std::endl;
+        for (int currentMinutes = startMinutes; currentMinutes < endMinutes; currentMinutes += 30) {
+            int currentHour = (currentMinutes / 60) % 24;
+            int currentMinute = currentMinutes % 60;
+            //// Corrected printing logic with proper formatting and alignment
+            //std::cout << "     " << q1 + std::to_string(slot) + q2 << "     "
+            //    << std::setfill('0') << std::setw(2) << currentHour << ":"
+            //    << std::setfill('0') << std::setw(2) << currentMinute
+            //    << ":00" << std::endl;
+
+            std::stringstream ss;
+            ss << std::setfill('0') << std::setw(2) << currentHour << ":" << std::setfill('0') << std::setw(2) << currentMinute << ":00";
+            timeSlots.push_back(ss.str());
+            slot++;
         }
-        else
-        {
-            db.statement->setString(8, patient.IC);
+
+        // Check is the time slots empty
+        // Find the target date in the vector
+        db.PrepareStatement("SELECT * FROM appointment WHERE Date = ?");
+        db.statement->setString(1, patient.Appoint_Date);
+        db.QueryResult();
+
+        while (db.result->next()) {
+            auto it = std::find(timeSlots.begin(), timeSlots.end(), db.result->getString("Time"));
+
+            // If the date is found, erase it from the vector
+            if (it != timeSlots.end()) {
+                timeSlots.erase(it);
+                slot--;
+            }
         }
 
-        IsEmpty(patient.Contact_Number) ? db.statement->setNull(9, sql::DataType::VARCHAR) : db.statement->setString(9, patient.Contact_Number);
-        IsEmpty(patient.Email) ? db.statement->setNull(10, sql::DataType::VARCHAR) : db.statement->setString(10, patient.Email);
-
-        //Prevent run the Add new patient only
-        if (IsEmpty(patient.Appoint_With))
-        {
-            db.statement->setNull(10, sql::DataType::VARCHAR);
+        for (size_t i = 0; i < timeSlots.size(); i++) {
+            cout << "     " << q1 + to_string(i) + q2 << "     "
+                << timeSlots[i] << endl;
         }
 
-        db.statement->executeUpdate();
+        cout << "\n\n\n\n";
 
-        db.PrepareStatement("INSERT INTO appointment VALUES(?, ?, ?, DEFAULT)");
-        db.statement->setString(1, to_string(appointment_id));
-        db.statement->setString(2, to_string(patient_id));
-        IsEmpty(patient.Appoint_With) ? db.statement->setNull(3, sql::DataType::VARCHAR) : db.statement->setString(3, patient.Appoint_With);
-        db.statement->executeUpdate();
+        char input[3] = {};
+        bool isConfirm = false;
+        int option = 0, appointment_slot = 0;
+        string selected = BWHITE_TEXT + BOLD;
+        string not_selected = GRAY_TEXT;
+
+        auto erase_line = [](int start, int end) -> void{
+            if (start < end)
+            {
+                for (int i = start; i <= end; ++i)
+                {
+                    cout << "\x1b[2K"; // Delete current line
+                    if (i < end)
+                    {
+                        cout << "\x1b[A"; // Move up
+                    }
+                }
+            }
+        };
+
+        auto Input = [](const int size, int& currentIndex, char input[], char keyIn) -> void {
+            if (currentIndex < size - 1)
+            {
+                input[currentIndex] = keyIn;
+                currentIndex++;
+            }
+        };
+
+        auto Erase_Elements = [](char input[], int& currentIndex) -> void {
+            if (currentIndex > 0)
+            {
+                currentIndex--;
+                input[currentIndex] = '\0';
+            }
+        };
+
+        auto Selected_Input = [Input,Erase_Elements](bool& exit, const int size, char input[], int& salary) -> void {
+            int currentIndex = strlen(input);
+
+            char keyIn = _getch();
+
+            if (keyIn == 0 || keyIn == -32) // Check for special keys (like arrow keys)
+            {
+                keyIn = _getch(); // Get the actual key code
+            }
+            else if (keyIn == KEY_DELETE)
+            {
+                Erase_Elements(input, currentIndex);
+                salary = atof(input);
+            }
+            else if (keyIn == KEY_ENTER)
+            {
+                exit = true;
+            }
+            else
+            {
+                if (isdigit(keyIn)) //Make sure the user input digit instead of character
+                {
+                    Input(size, currentIndex, input, keyIn);
+                    salary = atof(input);
+                }
+            }
+
+        };
+
+
+        while (!isConfirm) {
+            cout << (option == 0 ? selected : not_selected) << "     Appointment Slots: " << input << RESET << "\n\n";
+            cout << (option == 1 ? selected + ">" : not_selected) << "     Confirm Appointment" << RESET << "\n\n\n";
+
+
+            switch (_getch()) {
+            case KEY_UP:
+                if (option > 0) { option--; }
+                break;
+
+            case KEY_DOWN:
+                if (option < 1) { option++; }
+                break;
+
+            case KEY_ENTER:
+                switch (option)
+                {
+                    case 0: {
+                        int size = sizeof(input) / sizeof(input[0]);
+                        bool exit = false;
+
+                        while (!exit) {
+                            erase_line(0, 5);
+                            cout << (option == 0 ? selected + ">" : not_selected) << "     Appointment Slots: " << appointment_slot << RESET << "\n\n";
+                            cout << (option == 1 ? selected + ">" : not_selected) << "     Confirm Appointment" << RESET << "\n\n\n";
+                            Selected_Input(exit, size, input, appointment_slot);
+                        }
+                        break;
+                    }
+                    
+                    case 1: {
+                        if (appointment_slot >= 0 && appointment_slot < slot) {
+                            //Insert patient
+                            db.PrepareStatement("INSERT INTO patient VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DEFAULT)");
+                            db.statement->setString(1, to_string(patient_id));
+                            IsEmpty(patient.Name) ? db.statement->setNull(2, sql::DataType::VARCHAR) : db.statement->setString(2, patient.Name);
+                            db.statement->setString(3, patient.DOB);
+                            IsEmpty(patient.Gender) ? db.statement->setNull(4, sql::DataType::VARCHAR) : db.statement->setString(4, patient.Gender);
+                            IsEmpty(patient.Race) ? db.statement->setNull(5, sql::DataType::VARCHAR) : db.statement->setString(5, patient.Race);
+                            IsEmpty(patient.Religion) ? db.statement->setNull(6, sql::DataType::VARCHAR) : db.statement->setString(6, patient.Religion);
+                            IsEmpty(patient.Address) ? db.statement->setNull(7, sql::DataType::VARCHAR) : db.statement->setString(7, patient.Address);
+                            // IsEmpty(patient.IC) ? db.statement->setNull(8, sql::DataType::VARCHAR) : db.statement->setString(8, patient.IC);
+
+                            if (IsEmpty(patient.IC)) {
+                                db.statement->setNull(8, sql::DataType::VARCHAR);
+                            }
+                            else if (isExist) {
+                                db.statement->setNull(8, sql::DataType::VARCHAR);
+                                cout << "Patient already exist. ";
+                            }
+                            else
+                            {
+                                db.statement->setString(8, patient.IC);
+                            }
+
+                            IsEmpty(patient.Contact_Number) ? db.statement->setNull(9, sql::DataType::VARCHAR) : db.statement->setString(9, patient.Contact_Number);
+                            IsEmpty(patient.Email) ? db.statement->setNull(10, sql::DataType::VARCHAR) : db.statement->setString(10, patient.Email);
+
+                            //Prevent run the Add new patient only
+                            if (IsEmpty(patient.Appoint_With))
+                            {
+                                db.statement->setNull(10, sql::DataType::VARCHAR);
+                            }
+
+                            db.statement->executeUpdate();
+
+                            db.PrepareStatement("INSERT INTO appointment VALUES(?, ?, ?, ?, ?, DEFAULT)");
+                            db.statement->setString(1, to_string(appointment_id));
+                            db.statement->setString(2, to_string(patient_id));
+                            IsEmpty(patient.Appoint_With) ? db.statement->setNull(3, sql::DataType::VARCHAR) : db.statement->setString(3, patient.Appoint_With);
+                            db.statement->setString(4, patient.Appoint_Date);
+                            db.statement->setString(5, timeSlots.at(appointment_slot));
+                            db.statement->executeUpdate();
+
+                            isConfirm = true;
+                        }
+                        else
+                        {
+                            cout << "Invalid input.";
+                            _getch();
+                        }
+                        break;
+                    }
+                }
+                break;
+
+            case KEY_ESCAPE:
+                isConfirm = true;
+                throw exception("Back");
+                break;
+            }
+            erase_line(0, 5);
+        }
     }
     else
     {
@@ -574,7 +789,7 @@ void Nurse::AddNewPatient(Patient patient)
 
 }
 
-void Nurse::AdmitFormerPatient(string patient_no, char appointment_with[])
+void Nurse::AdmitFormerPatient(string patient_no, char appointment_with[], char appointment_date[])
 {
     Sql_DB db;
     string query;
@@ -596,19 +811,221 @@ void Nurse::AdmitFormerPatient(string patient_no, char appointment_with[])
         }
     }
 
-    //Create new appointment
-    query = "INSERT INTO appointment VALUES(?, ?, ?, DEFAULT)";
-    db.PrepareStatement(query);
-    db.statement->setString(1, to_string(appointment_id));
-    db.statement->setString(2, patient_no);
-    db.statement->setString(3, string(appointment_with));
-    db.statement->executeUpdate();
-    
+    // Appointment time schedule
+    system("cls");
+    cout << "Appointment Time Schedule\n"
+        << "=======================================================================================\n\n";
 
-    //Update the patient's status
-    query = "UPDATE patient SET Status = 'Admitted' WHERE patient_id = '" + patient_no + "'";
-    db.PrepareStatement(query);
-    db.statement->executeUpdate();
+    // Get time schedule for that doctor on that room
+    db.PrepareStatement("SELECT Room_Id, Time_from, Time_to, CASE WHEN Time_from < Time_to THEN (HOUR(Time_to) * 60 + MINUTE(Time_to) - HOUR(Time_from) * 60 - MINUTE(Time_from)) / 30 ELSE ((HOUR(Time_to) * 60 + MINUTE(Time_to) + 24 * 60) - (HOUR(Time_from) * 60 + MINUTE(Time_from))) / 30 END AS num_appointments FROM room WHERE Staff_Id = ?");
+    db.statement->setString(1, appointment_with);
+    db.QueryResult();
+    db.result->next();
+
+    struct Time {
+        int hour;
+        int minute;
+    };
+
+    auto parseTime = [](const std::string& timeStr) -> Time {
+        int hour, minute;
+        char colon;
+        std::istringstream timeStream(timeStr);
+        timeStream >> hour >> colon >> minute;
+        return { hour, minute };
+        };
+
+    auto timeToMinutes = [](const Time& time) -> int {
+        return time.hour * 60 + time.minute;
+        };
+
+    Time startTime = parseTime(db.result->getString("Time_from"));
+    Time endTime = parseTime(db.result->getString("Time_to"));
+
+    int startMinutes = timeToMinutes(startTime);
+    int endMinutes = timeToMinutes(endTime);
+
+    // Handle the case where end time is on the next day
+    if (endMinutes < startMinutes) {
+        endMinutes += 24 * 60;  // Add 24 hours
+    }
+
+    int slot = 0;
+    vector<string> timeSlots;
+    string q1 = "[slot ";
+    string q2 = "]";
+
+    std::cout << "Time slots:" << std::endl;
+    for (int currentMinutes = startMinutes; currentMinutes < endMinutes; currentMinutes += 30) {
+        int currentHour = (currentMinutes / 60) % 24;
+        int currentMinute = currentMinutes % 60;
+
+        std::stringstream ss;
+        ss << std::setfill('0') << std::setw(2) << currentHour << ":" << std::setfill('0') << std::setw(2) << currentMinute << ":00";
+        timeSlots.push_back(ss.str());
+        slot++;
+    }
+
+    // Check is the time slots empty
+    // Find the target date in the vector
+    db.PrepareStatement("SELECT * FROM appointment WHERE Date = ?");
+    db.statement->setString(1, appointment_date);
+    db.QueryResult();
+
+    while (db.result->next()) {
+        auto it = std::find(timeSlots.begin(), timeSlots.end(), db.result->getString("Time"));
+
+        // If the date is found, erase it from the vector
+        if (it != timeSlots.end()) {
+            timeSlots.erase(it);
+            slot--;
+        }
+    }
+
+    for (size_t i = 0; i < timeSlots.size(); i++) {
+        cout << "     " << q1 + to_string(i) + q2 << "     "
+            << timeSlots[i] << endl;
+    }
+
+    cout << "\n\n\n\n";
+
+    char input[3] = {};
+    bool isConfirm = false;
+    int option = 0, appointment_slot = 0;
+    string selected = BWHITE_TEXT + BOLD;
+    string not_selected = GRAY_TEXT;
+
+    auto erase_line = [](int start, int end) -> void {
+        if (start < end)
+        {
+            for (int i = start; i <= end; ++i)
+            {
+                cout << "\x1b[2K"; // Delete current line
+                if (i < end)
+                {
+                    cout << "\x1b[A"; // Move up
+                }
+            }
+        }
+        };
+
+    auto Input = [](const int size, int& currentIndex, char input[], char keyIn) -> void {
+        if (currentIndex < size - 1)
+        {
+            input[currentIndex] = keyIn;
+            currentIndex++;
+        }
+        };
+
+    auto Erase_Elements = [](char input[], int& currentIndex) -> void {
+        if (currentIndex > 0)
+        {
+            currentIndex--;
+            input[currentIndex] = '\0';
+        }
+        };
+
+    auto Selected_Input = [Input, Erase_Elements](bool& exit, const int size, char input[], int& salary) -> void {
+        int currentIndex = strlen(input);
+
+        char keyIn = _getch();
+
+        if (keyIn == 0 || keyIn == -32) // Check for special keys (like arrow keys)
+        {
+            keyIn = _getch(); // Get the actual key code
+        }
+        else if (keyIn == KEY_DELETE)
+        {
+            Erase_Elements(input, currentIndex);
+            salary = atof(input);
+        }
+        else if (keyIn == KEY_ENTER)
+        {
+            exit = true;
+        }
+        else
+        {
+            if (isdigit(keyIn)) //Make sure the user input digit instead of character
+            {
+                Input(size, currentIndex, input, keyIn);
+                salary = atof(input);
+            }
+        }
+
+        };
+
+    while (!isConfirm) {
+        cout << (option == 0 ? selected : not_selected) << "     Appointment Slots: " << input << RESET << "\n\n";
+        cout << (option == 1 ? selected + ">" : not_selected) << "     Confirm Appointment" << RESET << "\n\n\n";
+
+
+        switch (_getch()) {
+        case KEY_UP:
+            if (option > 0) { option--; }
+            break;
+
+        case KEY_DOWN:
+            if (option < 1) { option++; }
+            break;
+
+        case KEY_ENTER:
+            switch (option)
+            {
+            case 0: {
+                int size = sizeof(input) / sizeof(input[0]);
+                bool exit = false;
+
+                while (!exit) {
+                    erase_line(0, 5);
+                    cout << (option == 0 ? selected + ">" : not_selected) << "     Appointment Slots: " << appointment_slot << RESET << "\n\n";
+                    cout << (option == 1 ? selected + ">" : not_selected) << "     Confirm Appointment" << RESET << "\n\n\n";
+                    Selected_Input(exit, size, input, appointment_slot);
+                }
+                break;
+            }
+
+            case 1: {
+                if (appointment_slot >= 0 && appointment_slot < slot) {
+                    
+                    //Create new appointment
+                    db.PrepareStatement("INSERT INTO appointment VALUES(?, ?, ?, ?, ?, DEFAULT)");
+                    db.statement->setString(1, to_string(appointment_id));
+                    db.statement->setString(2, patient_no);
+                    db.statement->setString(3, appointment_with);
+                    db.statement->setString(4, appointment_date);
+                    db.statement->setString(5, timeSlots.at(appointment_slot));
+                    db.statement->executeUpdate();
+
+
+                    //Update the patient's status
+                    query = "UPDATE patient SET Status = 'Admitted' WHERE patient_id = '" + patient_no + "'";
+                    db.PrepareStatement(query);
+                    db.statement->executeUpdate();
+
+                    isConfirm = true;
+                }
+                else
+                {
+                    cout << "Invalid input.";
+                    _getch();
+                }
+                break;
+            }
+            }
+            break;
+
+        case KEY_ESCAPE:
+            isConfirm = true;
+            throw exception("Back");
+            break;
+        }
+        erase_line(0, 5);
+    }
+
+
+
+
+    
 
 }
 

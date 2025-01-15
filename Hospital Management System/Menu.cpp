@@ -7,6 +7,8 @@
 #include <sstream> //Used stringstream
 #include <iomanip> //Used for setprecision
 #include <cmath> //Used for abs
+#include <regex>
+#include <ctime>
 #include <pdflib.hpp>
 #include <codecvt> // wstring convertor
 
@@ -251,6 +253,51 @@ string blank(int default_space, string input)
 		space = space + " ";
 	}
 	return space;
+}
+
+void printTimeSlots(const std::string& startTimeStr, const std::string& endTimeStr) {
+	struct Time {
+		int hour;
+		int minute;
+	};
+
+	auto parseTime = [](const std::string& timeStr) -> Time {
+		int hour, minute;
+		char colon;
+		std::istringstream timeStream(timeStr);
+		timeStream >> hour >> colon >> minute;
+		return { hour, minute };
+		};
+
+	auto timeToMinutes = [](const Time& time) -> int {
+		return time.hour * 60 + time.minute;
+		};
+
+	Time startTime = parseTime(startTimeStr);
+	Time endTime = parseTime(endTimeStr);
+
+	int startMinutes = timeToMinutes(startTime);
+	int endMinutes = timeToMinutes(endTime);
+
+	// Handle the case where end time is on the next day
+	if (endMinutes < startMinutes) {
+		endMinutes += 24 * 60;  // Add 24 hours
+	}
+
+	int slot = 0;
+	string q1 = "[slot ";
+	string q2 = "]";
+
+	std::cout << "Time slots:" << std::endl;
+	for (int currentMinutes = startMinutes; currentMinutes <= endMinutes; currentMinutes += 30) {
+		int currentHour = (currentMinutes / 60) % 24;
+		int currentMinute = currentMinutes % 60;
+		// Corrected printing logic with proper formatting and alignment
+		std::cout << "     " << q1 + std::to_string(slot) + q2 << "     "
+			<< std::setfill('0') << std::setw(2) << currentHour << ":" 
+			<< std::setfill('0') << std::setw(2) << currentMinute << std::endl;
+		slot++;
+	}
 }
 /*====================================================================================================================*/
 
@@ -4154,7 +4201,7 @@ void Nurse_Menu::PatientRecord_Menu(Patient patient)
 
 void Nurse_Menu::PatientAdd_Option_Menu(int option, string selected, string not_selected, Patient& patient)
 {
-	Erase_Lines(0, 29);
+	Erase_Lines(0, 31);
 	selected += "> ";
 
 	cout << "New Patient Information\n";
@@ -4169,8 +4216,9 @@ void Nurse_Menu::PatientAdd_Option_Menu(int option, string selected, string not_
 	cout << (option == 7 ? selected : not_selected) << "  Contact Number   : " << patient.Contact_Number << RESET << endl << endl;
 	cout << (option == 8 ? selected : not_selected) << "  Email            : " << patient.Email << RESET << endl << endl;
 	cout << (option == 9 ? selected : not_selected) << "  Appointment with : " << patient.Appoint_With << RESET << endl << endl;
+	cout << (option == 10 ? selected : not_selected) << "  Appointment date : " << patient.Appoint_Date << RESET << endl << endl;
 	cout << "=======================================================================================\n\n";
-	cout << (option == 10 ? selected : not_selected) << "  Add the Patient\n\n\n" << RESET;//29
+	cout << (option == 11 ? selected : not_selected) << "  Add the Patient\n\n\n" << RESET;//31
 }
 
 void Nurse_Menu::Update_Option_Menu(int option, string selected, string not_selected, Patient& patient)
@@ -4401,6 +4449,64 @@ void Nurse_Menu::Discharge_Menu(char date[], string payment_method, string card_
 	cout << endl; //24
 }
 
+void Nurse_Menu::Selected_Appointment_Time(string patient_no, string doctor_no) {
+	system("cls");
+	Sql_DB db;
+	cout << "Appointment Time Schedule\n"
+		<< "=======================================================================================\n\n";
+
+	// Get time schedule for that doctor on that room
+	db.PrepareStatement("SELECT Room_Id, Time_from, Time_to, CASE WHEN Time_from < Time_to THEN (HOUR(Time_to) * 60 + MINUTE(Time_to) - HOUR(Time_from) * 60 - MINUTE(Time_from)) / 30 ELSE ((HOUR(Time_to) * 60 + MINUTE(Time_to) + 24 * 60) - (HOUR(Time_from) * 60 + MINUTE(Time_from))) / 30 END AS num_appointments FROM room WHERE Staff_Id = ?");
+	db.statement->setString(1, doctor_no);
+	db.QueryResult();
+	db.result->next();
+
+	// printTimeSlots(db.result->getString("Time_from"), db.result->getString("Time_to"));
+
+	struct Time {
+		int hour;
+		int minute;
+	};
+
+	auto parseTime = [](const std::string& timeStr) -> Time {
+		int hour, minute;
+		char colon;
+		std::istringstream timeStream(timeStr);
+		timeStream >> hour >> colon >> minute;
+		return { hour, minute };
+		};
+
+	auto timeToMinutes = [](const Time& time) -> int {
+		return time.hour * 60 + time.minute;
+		};
+
+	Time startTime = parseTime(db.result->getString("Time_from"));
+	Time endTime = parseTime(db.result->getString("Time_to"));
+
+	int startMinutes = timeToMinutes(startTime);
+	int endMinutes = timeToMinutes(endTime);
+
+	// Handle the case where end time is on the next day
+	if (endMinutes < startMinutes) {
+		endMinutes += 24 * 60;  // Add 24 hours
+	}
+
+	int slot = 0;
+	string q1 = "[slot ";
+	string q2 = "]";
+
+	std::cout << "Time slots:" << std::endl;
+	for (int currentMinutes = startMinutes; currentMinutes <= endMinutes; currentMinutes += 30) {
+		int currentHour = (currentMinutes / 60) % 24;
+		int currentMinute = currentMinutes % 60;
+		// Corrected printing logic with proper formatting and alignment
+		std::cout << "     " << q1 + std::to_string(slot) + q2 << "     "
+			<< std::setfill('0') << std::setw(2) << currentHour << ":"
+			<< std::setfill('0') << std::setw(2) << currentMinute << std::endl;
+		slot++;
+	}
+}
+
 void Nurse_Menu::Selected_PatientAdmit(string patient_no)
 {
 	Patient patient;
@@ -4408,7 +4514,9 @@ void Nurse_Menu::Selected_PatientAdmit(string patient_no)
 	Sql_DB db;
 	bool selecting = true;
 	Erase_Lines(0, 1);
-	int option = 0, option_AppointWith = 0;
+	int option = 0, option_AppointWith = 0, appointment_slot = 0;
+	char input[3] = {};
+	bool isConfirm = false;
 	string selected = BWHITE_TEXT + BOLD;
 	string not_selected = GRAY_TEXT;
 
@@ -4416,7 +4524,8 @@ void Nurse_Menu::Selected_PatientAdmit(string patient_no)
 	do
 	{
 		cout << (option == 0 ? selected : not_selected) << "Have appoinment with : " << patient.Appoint_With << endl;
-		cout << (option == 1 ? selected + "> " : not_selected) << "Confirm" << endl;
+		cout << (option == 1 ? selected : not_selected) << "Appointment date     : " << patient.Appoint_Date << endl;
+		cout << (option == 2 ? selected + "> " : not_selected) << "Confirm" << endl;
 
 		switch (_getch())
 		{
@@ -4428,13 +4537,13 @@ void Nurse_Menu::Selected_PatientAdmit(string patient_no)
 				}
 				else
 				{
-					option = 1;
+					option = 2;
 				}
 				break;
 			}
 			case KEY_DOWN:
 			{
-				if (option < 1)
+				if (option < 2)
 				{
 					option++;
 				}
@@ -4479,12 +4588,13 @@ void Nurse_Menu::Selected_PatientAdmit(string patient_no)
 
 					while (!exit)
 					{
-						Erase_Lines(0, 2);
+						Erase_Lines(0, 3);
 						string showed = "  < " + Doctor_Name[option_AppointWith] + " >";
 						strcpy_s(patient.Appoint_With, size, showed.c_str());
 
 						cout << (option == 0 ? selected : not_selected) << "Have appoinment with : " << showed << endl;
-						cout << (option == 1 ? selected + "> " : not_selected) << "Confirm" << endl;
+						cout << (option == 1 ? selected : not_selected) << "Appointment date     : " << patient.Appoint_Date << endl;
+						cout << (option == 2 ? selected + "> " : not_selected) << "Confirm" << endl;
 
 						inputOperations::Available_Input(exit, Doctor_Id, row_count, option_AppointWith, patient.Appoint_With, size);
 					}
@@ -4494,20 +4604,56 @@ void Nurse_Menu::Selected_PatientAdmit(string patient_no)
 					delete[] Doctor_Id;
 					delete[] Doctor_Name;
 				}
-				else if (option == 1)
+				else if (option == 1) {
+					int size = sizeof(patient.Appoint_Date) / sizeof(patient.Appoint_Date[0]);
+					bool exit = false;
+
+					while (!exit)
+					{
+						Erase_Lines(0, 3);
+						cout << (option == 0 ? selected : not_selected) << "Have appoinment with : " << patient.Appoint_With << endl;
+						cout << (option == 1 ? selected + "> " : not_selected) << "Appointment date     : " << patient.Appoint_Date << endl;
+						cout << (option == 2 ? selected + "> " : not_selected) << "Confirm" << endl;
+						inputOperations::Selected_Input(exit, size, patient.Appoint_Date);
+					}
+					break;
+				}
+				else if (option == 2)
 				{
+					auto isValidDate = [](const std::string& dateOfBirth) -> bool {
+						const regex pattern(R"(^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$)");
+						return regex_match(dateOfBirth, pattern);
+						};
+
 
 					bool valid = true;
 					try
 					{
-						nurse.AdmitFormerPatient(patient_no, patient.Appoint_With);
+						if (isValidDate(patient.Appoint_Date) && patient.Appoint_With[0] != '\0') {
+							nurse.AdmitFormerPatient(patient_no, patient.Appoint_With, patient.Appoint_Date);
+							selecting = false;
+						}
+						else if (patient.Appoint_With[0] == '\0') {
+							cout << "\n\nMissing doctor id.\n";
+							_getch();
+							Erase_Lines(0, 3);
+							valid = false;
+						}
+						else if(!isValidDate(patient.Appoint_Date)) {
+							cout << "\n\nInvalid date format.\n";
+							_getch();
+							Erase_Lines(0, 3);
+							valid = false;
+						}
+						
 					}
 					catch (sql::SQLException& e)
 					{
-						cout << "Invalid, something is wrong.";
+						cout << "Invalid input.";
 						valid = false;
 						_getch();
 					}
+					catch (exception e) { valid = false; selecting = false;}
 
 					if (valid == true)
 					{
@@ -4515,13 +4661,11 @@ void Nurse_Menu::Selected_PatientAdmit(string patient_no)
 						cout << "Successfully added the patient!";
 						_getch();
 					}
-
 				}
-
 				break;
 			}
 		}
-		Erase_Lines(0, 2);
+		Erase_Lines(0, 3);
 	} while (selecting);
 }
 
@@ -4531,7 +4675,7 @@ void Nurse_Menu::Selected_PatientAdd(string patient_no)
 	Patient patient;
 	system("cls");
 	Sql_DB db;
-	int option = 0, optionStart = 0, optionEnd = 10, option_gender = 0, option_race = 0, option_religion = 0, option_AppointWith = 0;
+	int option = 0, optionStart = 0, optionEnd = 11, option_gender = 0, option_race = 0, option_religion = 0, option_AppointWith = 0;
 	bool selecting = true;
 
 	string selected = BWHITE_TEXT + BOLD;
@@ -4553,8 +4697,9 @@ void Nurse_Menu::Selected_PatientAdd(string patient_no)
 		cout << (option == 7 ? selected : not_selected) << "  Contact Number   : " << patient.Contact_Number << RESET << endl << endl;
 		cout << (option == 8 ? selected : not_selected) << "  Email            : " << patient.Email << RESET << endl << endl;
 		cout << (option == 9 ? selected : not_selected) << "  Appointment with : " << patient.Appoint_With << RESET << endl << endl;
+		cout << (option == 10 ? selected : not_selected) << "  Appointment date : " << patient.Appoint_Date << RESET << endl << endl;
 		cout << "=======================================================================================\n\n";
-		cout << (option == 10 ? selected : not_selected) << "  Add the Patient\n\n\n" << RESET;//27
+		cout << (option == 11 ? selected : not_selected) << "  Add the Patient\n\n\n" << RESET;//27
 		cout << message;
 
 		message = "";
@@ -4755,11 +4900,23 @@ void Nurse_Menu::Selected_PatientAdd(string patient_no)
 						delete[] Doctor_Name;
 						break;
 					}
-					case 10:
+					case 10: {
+						int size = sizeof(patient.Appoint_Date) / sizeof(patient.Appoint_Date[0]);
+						bool exit = false;
+
+						while (!exit)
+						{
+							PatientAdd_Option_Menu(option, selected, not_selected, patient);
+							inputOperations::Selected_Input(exit, size, patient.Appoint_Date);
+						}
+						break;
+					}
+					case 11:
 					{
 						bool valid = true;
 						try
 						{
+							// Selected_Appointment_Time(patient_no, patient.Appoint_With);
 							nurse.AddNewPatient(patient);
 						}
 						catch (sql::SQLException& e)
@@ -4767,6 +4924,9 @@ void Nurse_Menu::Selected_PatientAdd(string patient_no)
 							cout << "Invalid input.";
 							valid = false;
 							_getch();
+						}
+						catch (exception& e) {
+							if (string(e.what()) == "Back") { valid = false; }
 						}
 
 						if (valid == true)
@@ -4778,13 +4938,12 @@ void Nurse_Menu::Selected_PatientAdd(string patient_no)
 						break;
 					}
 				}
-
 				break;
 			}
 			
 		}
 
-		Erase_Lines(0, 29);
+		Erase_Lines(0, 31);
 	} while (selecting);
 
 }

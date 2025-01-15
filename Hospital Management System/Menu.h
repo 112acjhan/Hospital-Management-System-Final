@@ -99,6 +99,7 @@ class Nurse_Menu
 		string Get_List(string query, string first_column, string third_column, string tittle, string additionalOption);
 		void Patient_Menu(Patient patient);
 		void PatientRecord_Menu(Patient patient);
+		void Selected_Appointment_Time(string patient_no, string doctor_no);
 		void Selected_PatientAdmit(string patient_no);
 		void Selected_PatientAdd(string patient_no);
 		void Selected_Update_Patient(string patient_no);

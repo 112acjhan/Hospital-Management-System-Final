@@ -1,10 +1,18 @@
 #include <iostream>
 #include <string>
 #include "Sql_DB.h"
+#include "ANSI.h"
 using namespace std;
 
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
+#define KEY_UP 72    
+#define KEY_DOWN 80  
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
+#define KEY_DELETE 8
+#define KEY_ENTER '\r'
+#define KEY_ESCAPE 27
 
 class Account
 {
@@ -56,6 +64,7 @@ class Patient : public Account
 protected:
 	char Patient_Id[12] = {};
 	char Appoint_With[50] = {};
+	char Appoint_Date[11] = {};
 
 public:
 	friend class Nurse;
@@ -143,7 +152,7 @@ class Nurse : public Account
 {
 	protected:
 		void AddNewPatient(Patient patient);
-		void AdmitFormerPatient(string patient_no, char appointment_with[]);
+		void AdmitFormerPatient(string patient_no, char appointment_with[], char appointment_date[]);
 		void UpdatePatientInfo(Patient patient);
 		void UpdateNurseOnWard(string staff_no, string ward_no);
 		void BedAdmit(string bed_no, string patient_no, char date[]);
