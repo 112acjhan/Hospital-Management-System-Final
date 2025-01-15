@@ -2,6 +2,7 @@
 #include <conio.h> // _getch(), KEY...
 #include "Menu.h"
 #include <iterator>
+#include <vector>
 #include <cctype> //isdigit
 #include <cstring> //.c_str()
 #include <sstream> //Used stringstream
@@ -2478,17 +2479,17 @@ string HR_Menu::Report_Select_Menu(int option) // NEWEST
 		while (true)
 		{
 			cout << (optionSelect == 0 ? selected : not_selected) << "Year    : " << years[optionYear] << RESET << endl;
-			cout << (optionSelect == 1 ? selected : not_selected) << "*Month  : " << months[optionMonth] << RESET << endl;
-			cout << (optionSelect == 2 ? selected : not_selected) << "Confirm" << RESET << endl;
+			//cout << (optionSelect == 1 ? selected : not_selected) << "*Month  : " << months[optionMonth] << RESET << endl;
+			cout << (optionSelect == 1 ? selected : not_selected) << "Confirm" << RESET << endl;
 
 			switch (_getch())
 			{
 			case KEY_UP:
 				if (optionSelect > 0) { optionSelect--; }
-				else { optionSelect = 2; }
+				else { optionSelect = 1; }
 				break;
 			case KEY_DOWN:
-				if (optionSelect < 2) { optionSelect++; }
+				if (optionSelect < 1) { optionSelect++; }
 				else { optionSelect = 0; }
 				break;
 			case KEY_ENTER:
@@ -2498,11 +2499,11 @@ string HR_Menu::Report_Select_Menu(int option) // NEWEST
 				{
 					while (!exit)
 					{
-						Erase_Lines(0, 3);
+						Erase_Lines(0, 2);
 						string showed = " < " + years[optionYear] + " >";
 						cout << (optionSelect == 0 ? selected : not_selected) << "Year    : " << showed << RESET << endl;
-						cout << (optionSelect == 1 ? selected : not_selected) << "*Month  : " << months[optionMonth] << RESET << endl;
-						cout << (optionSelect == 2 ? selected : not_selected) << "Confirm" << RESET << endl;
+						//cout << (optionSelect == 1 ? selected : not_selected) << "*Month  : " << months[optionMonth] << RESET << endl;
+						cout << (optionSelect == 1 ? selected : not_selected) << "Confirm" << RESET << endl;
 
 						switch (_getch())
 						{
@@ -2519,7 +2520,7 @@ string HR_Menu::Report_Select_Menu(int option) // NEWEST
 					}
 				}
 				
-				if (optionSelect == 1)
+				/*if (optionSelect == 1)
 				{
 					while (!exit)
 					{
@@ -2542,9 +2543,9 @@ string HR_Menu::Report_Select_Menu(int option) // NEWEST
 							break;
 						}
 					}
-				}
+				}*/
 				
-				if (optionSelect == 2)
+				if (optionSelect == 1)
 				{
 					if (months[optionMonth].empty()) { return years[optionYear]; }
 					else 
@@ -2561,7 +2562,7 @@ string HR_Menu::Report_Select_Menu(int option) // NEWEST
 				return "";
 				break;
 			}
-			Erase_Lines(0, 3);
+			Erase_Lines(0, 2);
 		}
 
 	}
@@ -3598,56 +3599,15 @@ void HR_Menu::Selected_BusinessReport(string year)
 }
 
 void HR_Menu::Selected_Transaction_Record(string year) {
-	system("cls");
-	int selected = 0;
+	int option = 0, option_categories = 0;
+	char time_from[6] = {};
+	char time_to[6] = {};
+	char category[100] = {};
+	bool refresh = false, exit = false;
 	Sql_DB db;
+	string selected = BWHITE_TEXT + BOLD;
+	string not_selected = GRAY_TEXT;
 	string months[12] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-
-	cout << "\n\n";
-	cout << "                                            HMS Transaction Record\n\n"
-		<< "Year: " << year << endl
-		<< "================================================================================================================\n"
-		<< "     " << setw(15) << left << "Trans. ID"
-		<< setw(30) << right << "Transaction Description"
-		<< setw(30) << "Date"
-		<< setw(30) << "Total Price" << "\n"
-		<< "     " << setw(15) << left << ""
-		<< setw(30) << right << "       "
-		<< setw(30) << "       "
-		<< setw(30) << "(RM)   " << "\n"
-		<< "----------------------------------------------------------------------------------------------------------------\n";
-
-	// Print out the Transaction Record
-	db.PrepareStatement("SELECT * FROM transaction_record WHERE Date LIKE '" + year + "%'");
-	db.QueryResult();
-
-	double total_income = 0;
-	double total_expenses = 0;
-
-	while (db.result->next()) {
-		cout << "     " << setw(15) << left << db.result->getInt("Transaction_Id")
-			<< setw(30) << right << db.result->getString("Description")
-			<< setw(30) << db.result->getString("Date")
-			<< setw(30) << fixed << setprecision(2) << db.result->getDouble("Total_Price") << "\n";
-
-		if (db.result->getDouble("Total_Price") > 0) { total_income += db.result->getDouble("Total_Price"); }
-		else { total_expenses -= db.result->getDouble("Total_Price"); }
-	}
-
-
-	cout << "\n----------------------------------------------------------------------------------------------------------------\n\n";
-	cout << "     " << setw(15) << left << "Total (RM) "
-		<< setw(30) << right << " "
-		<< setw(60) << " "
-		<< setw(30) << fixed << setprecision(2) << total_income - total_expenses << "\n\n";
-
-	cout << "================================================================================================================\n\n";
-
-	cout << "\n\n";
-	cout << "     ";
-	cout << selected << "> Save as pdf" << RESET << endl;
-
-	bool exit = false;
 
 	auto to_wstring = [](string input) -> wstring {
 		wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
@@ -3675,90 +3635,263 @@ void HR_Menu::Selected_Transaction_Record(string year) {
 		std::wstringstream ss;
 		ss << std::fixed << std::setprecision(2) << price;
 		return ss.str();
-
 		};
 
-	do
-	{
-		switch (_getch())
-		{
-		case KEY_ENTER:
-			try {
-				PDFlib p;
-				// wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
+	auto valid_date = [](string date) -> bool {
+		const std::regex pattern(R"((0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]))");
+		return std::regex_match(date, pattern);
+		};
 
-				if (p.begin_document(to_wstring("transaction_record.pdf"), to_wstring("")) == -1) {
-					throw runtime_error(c_to_string(p.get_errmsg()));
-				}
+	do {
+		system("cls");
+		cout << "\n";
+		cout << "                                            HMS Transaction Record\n\n"
+			<< "Year: " << year << endl
+			<< "================================================================================================================\n"
+			<< "     " << setw(15) << left << "Trans. ID"
+			<< setw(30) << right << "Transaction Description"
+			<< setw(30) << "Date"
+			<< setw(30) << "Total Price" << "\n"
+			<< "     " << setw(15) << left << ""
+			<< setw(30) << right << "       "
+			<< setw(30) << "       "
+			<< setw(30) << "(RM)   " << "\n"
+			<< "----------------------------------------------------------------------------------------------------------------\n";
 
-				// p.set_info("Creator", "Your Name");
-				p.set_info(to_wstring("Title"), to_wstring("Transaction Record"));
-				p.begin_page_ext(595, 842, to_wstring(""));
-				int font = p.load_font(to_wstring("Helvetica"), to_wstring("winansi"), to_wstring(""));
+		// Setting query
+		bool isValidDate = true;
+		string query = "SELECT * FROM transaction_record WHERE Date LIKE '" + year + "%'";
 
-				// Set up your database connection and retrieve records here
-				Sql_DB db;
-				db.PrepareStatement("SELECT * FROM transaction_record WHERE Date LIKE '" + year + "%'");
+		if (time_from[0] != '\0' && time_to[0] != '\0') {
+
+			if (valid_date(time_from) && valid_date(time_to)) {
+				db.PrepareStatement("SELECT DATEDIFF(?, ?) AS day_diff");
+				db.statement->setString(1, year + "-" + time_to);
+				db.statement->setString(2, year + "-" + time_from);
 				db.QueryResult();
+				db.result->next();
 
-				// Add the header
-				p.setfont(font, 10);
-				p.show_xy(to_wstring("                                            HMS Transaction Record"), 50, 800);
-				p.show_xy(to_wstring("Year: " + year), 50, 780);
-				p.show_xy(to_wstring("===================================================================================="), 50, 760);
-				p.show_xy(to_wstring("Trans. ID        Transaction Description                                                        Date                       Total Price (RM)"), 50, 740);
-				p.show_xy(to_wstring("===================================================================================="), 50, 720);
-
-				// Print out the Transaction Record
-				int y = 700;
-
-				while (db.result->next()) {
-					wstring trans_id = to_wstring(to_string(db.result->getInt("Transaction_Id")));
-					wstring description = to_wstring(db.result->getString("Description"));
-					wstring date = to_wstring(db.result->getString("Date"));
-					wstring total_price = format_price(db.result->getDouble("Total_Price"));
-
-					// Format each column
-					wstring trans_id_col = format_column(trans_id, 5);
-					wstring description_col = format_column(description, 30);
-					wstring date_col = format_column(date, 10);
-					wstring total_price_col = format_column(total_price, 10);
-
-					// Calculate positions for each column 
-					int x = 50; p.show_xy(format_column(trans_id, 5).c_str(), x, y);
-					x += 65;
-					p.show_xy(format_column(description, 30).c_str(), x, y);
-					x += 260;
-					p.show_xy(format_column(date, 10).c_str(), x, y);
-					x += 100;
-					p.show_xy(format_column(total_price, 10).c_str(), x, y);
-
-					y -= 20;
-
+				if (db.result->getInt("day_diff") < 0) {
+					cout << "Time from cannot earlier than Time to.\n";
+					_getch();
+					Erase_Lines(0, 1);
 				}
-
-				// Add the total
-				y -= 20;
-				p.show_xy(to_wstring("===================================================================================="), 50, y);
-				y -= 20;
-				p.show_xy(to_wstring("Total (RM)                                                                                                                                        ") + format_price(total_income - total_expenses), 50, y);
-
-				p.end_page_ext(to_wstring(""));
-				p.end_document(to_wstring(""));
+				else {
+					query = "SELECT * FROM transaction_record WHERE Date BETWEEN '" + year + "-" + time_from + "' AND '" + year + "-" + time_to + "'";
+				}
 			}
-			catch (PDFlib::Exception& ex) {
-				cerr << "PDFlib Exception occurred in file " << __FILE__ << " at line " << __LINE__ << ":" << endl;
-				cerr << "[" << ex.get_errnum() << "] " << c_to_string(ex.get_apiname()) << ": "
-					<< c_to_string(ex.get_errmsg()) << endl;
+			else {
+				isValidDate = false;
+				cout << "Invalid Month and Day Format.\n";
+				_getch();
+				Erase_Lines(0, 1);
 			}
-			exit = true;
-			break;
-
-		case KEY_ESCAPE:
-			exit = true;
-			break;
 		}
+
+		if (category[0] != '\0' && isValidDate != false) {
+			string categoryStr(category);
+			query += " AND description LIKE '" + categoryStr + "%'";
+		}
+
+		if ((time_from[0] == '\0' || time_to[0] == '\0') && category[0] == '\0') {
+			query = "SELECT * FROM transaction_record WHERE Date LIKE '" + year + "%'";
+		}
+
+		// Print out the Transaction Record
+		db.PrepareStatement(query);
+		db.QueryResult();
+
+		double total_income = 0;
+		double total_expenses = 0;
+
+		while (db.result->next()) {
+			cout << "     " << setw(15) << left << db.result->getInt("Transaction_Id")
+				<< setw(30) << right << db.result->getString("Description")
+				<< setw(30) << db.result->getString("Date")
+				<< setw(30) << fixed << setprecision(2) << db.result->getDouble("Total_Price") << "\n";
+
+			if (db.result->getDouble("Total_Price") > 0) { total_income += db.result->getDouble("Total_Price"); }
+			else { total_expenses -= db.result->getDouble("Total_Price"); }
+		}
+
+		if (exit) { refresh = true; }
+		else { refresh = false; }
+
+		cout << "\n----------------------------------------------------------------------------------------------------------------\n\n";
+		cout << "     " << setw(15) << left << "Total (RM) "
+			<< setw(30) << right << " "
+			<< setw(30) << " "
+			<< setw(30) << fixed << setprecision(2) << total_income - total_expenses << "\n\n";
+
+		cout << "================================================================================================================\n\n";
+
+		do
+		{
+			cout << (option == 0 ? selected : not_selected) << "   Time Range From (MM-DD) : " << time_from << RESET << endl;
+			cout << (option == 1 ? selected : not_selected) << "   Time Range To (MM-DD)   : " << time_to << RESET << endl;
+			cout << (option == 2 ? selected : not_selected) << "   Sort by category        : " << category << RESET << "\n\n";
+			cout << (option == 3 ? selected + " > " : not_selected) << "   Refresh" << RESET << endl;
+			cout << (option == 4 ? selected + " > " : not_selected) << "   Save as pdf" << RESET << "\n\n\n";
+
+			switch (_getch())
+			{
+			case KEY_UP:
+			{
+				if (option > 0) { option--; }
+				else { option = 4; }
+				break;
+			}
+			case KEY_DOWN:
+			{
+				if (option < 4) { option++; }
+				else { option = 0; }
+				break;
+			}
+			case KEY_ENTER:
+			{
+				if (option == 0) {
+					int size = sizeof(time_from) / sizeof(time_from[0]);
+					bool exit = false;
+
+					while (!exit)
+					{
+						Erase_Lines(0, 8);
+
+						cout << (option == 0 ? selected + " > " : not_selected) << "   Time Range From (MM-DD) : " << time_from << RESET << endl;
+						cout << (option == 1 ? selected : not_selected) << "   Time Range To (MM-DD)   : " << time_to << RESET << endl;
+						cout << (option == 2 ? selected : not_selected) << "   Sort by category        : " << category << RESET << "\n\n";
+						cout << (option == 3 ? selected + " > " : not_selected) << "   Refresh" << RESET << endl;
+						cout << (option == 4 ? selected + " > " : not_selected) << "   Save as pdf" << RESET << "\n\n\n";
+						inputOperations::Selected_Input(exit, size, time_from);
+					}
+				}
+				else if (option == 1) {
+					int size = sizeof(time_to) / sizeof(time_to[0]);
+					bool exit = false;
+
+					while (!exit)
+					{
+						Erase_Lines(0, 8);
+
+						cout << (option == 0 ? selected : not_selected) << "   Time Range From (MM-DD) : " << time_from << RESET << endl;
+						cout << (option == 1 ? selected + " > " : not_selected) << "   Time Range To (MM-DD)   : " << time_to << RESET << endl;
+						cout << (option == 2 ? selected : not_selected) << "   Sort by category        : " << category << RESET << "\n\n";
+						cout << (option == 3 ? selected + " > " : not_selected) << "   Refresh" << RESET << endl;
+						cout << (option == 4 ? selected + " > " : not_selected) << "   Save as pdf" << RESET << "\n\n\n";
+						inputOperations::Selected_Input(exit, size, time_to);
+					}
+				}
+				else if (option == 2) {
+					int size = sizeof(category) / sizeof(category[0]);
+					bool exit = false;
+					string input_option[3] = { "", "Restock", "Discharge" };
+					int size_option = sizeof(input_option) / sizeof(input_option[0]);
+
+					while (!exit)
+					{
+						Erase_Lines(0, 8);
+						string showed = "  < " + input_option[option_categories] + " >";
+						strcpy_s(category, size, showed.c_str());
+
+						cout << (option == 0 ? selected : not_selected) << "   Time Range From (MM-DD) : " << time_from << RESET << endl;
+						cout << (option == 1 ? selected : not_selected) << "   Time Range To (MM-DD)   : " << time_to << RESET << endl;
+						cout << (option == 2 ? selected + " > " : not_selected) << "   Sort by category        : " << showed << RESET << "\n\n";
+						cout << (option == 3 ? selected + " > " : not_selected) << "   Refresh" << RESET << endl;
+						cout << (option == 4 ? selected + " > " : not_selected) << "   Save as pdf" << RESET << "\n\n\n";
+
+						inputOperations::Available_Input(exit, input_option, size_option, option_categories, category, size);
+					}
+				}
+				else if (option == 3) {
+					refresh = true;
+				}
+				else if (option == 4) {
+					try {
+						PDFlib p;
+
+						if (p.begin_document(to_wstring("transaction_record.pdf"), to_wstring("")) == -1) {
+							throw runtime_error(c_to_string(p.get_errmsg()));
+						}
+
+						p.set_info(to_wstring("Title"), to_wstring("Transaction Record"));
+						p.begin_page_ext(595, 842, to_wstring(""));
+						int font = p.load_font(to_wstring("Helvetica"), to_wstring("winansi"), to_wstring(""));
+
+						// Set up your database connection and retrieve records here
+						Sql_DB db;
+						db.PrepareStatement(query);
+						db.QueryResult();
+
+						// Add the header
+						p.setfont(font, 10);
+						p.show_xy(to_wstring("                                            HMS Transaction Record"), 50, 800);
+						p.show_xy(to_wstring("Year: " + year), 50, 780);
+						p.show_xy(to_wstring("===================================================================================="), 50, 760);
+						p.show_xy(to_wstring("Trans. ID        Transaction Description                                                        Date                       Total Price (RM)"), 50, 740);
+						p.show_xy(to_wstring("===================================================================================="), 50, 720);
+
+						// Print out the Transaction Record
+						int y = 700;
+
+						while (db.result->next()) {
+							wstring trans_id = to_wstring(to_string(db.result->getInt("Transaction_Id")));
+							wstring description = to_wstring(db.result->getString("Description"));
+							wstring date = to_wstring(db.result->getString("Date"));
+							wstring total_price = format_price(db.result->getDouble("Total_Price"));
+
+							// Format each column
+							wstring trans_id_col = format_column(trans_id, 5);
+							wstring description_col = format_column(description, 30);
+							wstring date_col = format_column(date, 10);
+							wstring total_price_col = format_column(total_price, 10);
+
+							// Calculate positions for each column 
+							int x = 50; p.show_xy(format_column(trans_id, 5).c_str(), x, y);
+							x += 65;
+							p.show_xy(format_column(description, 30).c_str(), x, y);
+							x += 260;
+							p.show_xy(format_column(date, 10).c_str(), x, y);
+							x += 100;
+							p.show_xy(format_column(total_price, 10).c_str(), x, y);
+
+							y -= 20;
+
+						}
+
+						// Add the total
+						y -= 20;
+						p.show_xy(to_wstring("===================================================================================="), 50, y);
+						y -= 20;
+						p.show_xy(to_wstring("Total (RM)                                                                                                                                        ") + format_price(total_income - total_expenses), 50, y);
+						y -= 20;
+						p.show_xy(to_wstring("===================================================================================="), 50, y);
+
+						p.end_page_ext(to_wstring(""));
+						p.end_document(to_wstring(""));
+						cout << "Successfully save as pdf!" << endl;
+						_getch();
+						Erase_Lines(0, 1);
+					}
+					catch (PDFlib::Exception& ex) {
+						cerr << "PDFlib Exception occurred in file " << __FILE__ << " at line " << __LINE__ << ":" << endl;
+						cerr << "[" << ex.get_errnum() << "] " << c_to_string(ex.get_apiname()) << ": "
+							<< c_to_string(ex.get_errmsg()) << endl;
+					}
+					refresh = true;
+				}
+				break;
+			}
+			case KEY_ESCAPE:
+				refresh = true;
+				exit = true;
+				break;
+			}
+			Erase_Lines(0, 8);
+		} while (!refresh);
+
 	} while (!exit);
+
+	
 
 }
 
