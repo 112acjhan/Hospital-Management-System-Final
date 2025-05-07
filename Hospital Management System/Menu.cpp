@@ -3935,7 +3935,7 @@ void HR_Menu::Selected_GenerateBarChart(string year)
 	// Round the step size up to the nearest nice number
 	stepSize = ceil(stepSize / (magnitude / 2.0)) * (magnitude / 2.0);
 
-	// Recalculate maxPrice based on the rounded step size, which always slightly higher than the maxPrice
+	// Recalculate maxPrice based on the rounded step size, always slightly higher than the maxPrice
 	maxPrice = stepSize * HEIGHT;
 
 
@@ -4274,7 +4274,7 @@ string Nurse_Menu::Get_List(string query, string first_column, string third_colu
 
 						if (search[0] != '\0')
 						{
-							query = "SELECT * FROM patient WHERE Name LIKE '" + string(search) + "%'";
+							query = "SELECT * FROM patient WHERE Name LIKE '%" + string(search) + "%'";
 							option = 0;
 						}
 						else
